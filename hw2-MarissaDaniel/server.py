@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-app.config["DEBUG"] = True  # Only include this while you are testing your app
+app.config["DEBUG"] = True  # Only  include this while you are testing your app
 
 @app.route("/")
 def home():
