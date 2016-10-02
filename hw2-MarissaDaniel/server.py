@@ -1,13 +1,13 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask import Flask, render_template, request, g
+from flask import Flask, render_template, request, g, flash
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config["DEBUG"] = True  # Only  include this while you are testing your app
 
 app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'flaskr.db'),
+    DATABASE=os.path.join(app.root_path, 'vanmo.db'),
     SECRET_KEY='development key',
     USERNAME='admin',
     PASSWORD='default'
@@ -16,7 +16,10 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 @app.route("/")
 def home():
-	return render_template("home.html")
+	db = get_db()
+	cur = db.execute('select username, password from logins order by id desc')
+	logins = cur.fetchall()
+	return render_template("home.html", logins=logins)
 
 @app.route("/login")
 def login():
