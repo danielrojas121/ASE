@@ -16,25 +16,25 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 @app.route("/")
 def home():
-	db = get_db()
-	cur = db.execute('select username, password from logins order by id asc')
-	logins = cur.fetchall()
-	return render_template("home.html", logins=logins)
+    db = get_db()
+    cur = db.execute('select username, password from logins order by id asc')
+    logins = cur.fetchall()
+    return render_template("home.html", logins=logins)
 
 @app.route("/login")
 def login():
-	return render_template("login.html")
+    return render_template("login.html")
 
 @app.route("/signup", methods=["POST", "GET"]) 
 def signup():
-	if request.method == "POST":
-		db = get_db()
-		db.execute('insert into logins (username, password) values (?, ?)',
+    if request.method == "POST":
+        db = get_db()
+        db.execute('insert into logins (username, password) values (?, ?)',
                  [request.form['username'], request.form['password']])
-		db.commit()
-		return redirect("/")
-	else:
-		return render_template("signup.html")
+        db.commit()
+        return redirect("/")
+    else:
+        return render_template("signup.html")
 
 def connect_db():
     """Connects to the specific database."""
