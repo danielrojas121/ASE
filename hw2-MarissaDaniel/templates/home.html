@@ -8,6 +8,20 @@
     
     <p>Click <a href="/signup">here</a> to sign up.</p>
     <p>Click <a href="/login">here</a> to login.</p>
+    <form action="/home" method="post" class="add-entry">
+    	<dl>
+        <dt>Title:
+        <dd><input type="text" size="30" name="title">
+        <dt>Text:
+        <dd><textarea name="text" rows="5" cols="40"></textarea>
+        <dd><input type="submit" value="Share">
+      </dl>
+    </form>
+    <ul class="logins">
+ 	{% for entry in logins %}
+    <li><h2>{{ entry.username }}</h2>{{ entry.password }}</li>
+  	{% endfor %}
+  	</ul>
 
 </body>
 </html>
