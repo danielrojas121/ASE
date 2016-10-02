@@ -1,6 +1,6 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask import Flask, render_template, request, g, flash
+from flask import Flask, render_template, request, g, redirect
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -17,7 +17,7 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 @app.route("/")
 def home():
 	db = get_db()
-	cur = db.execute('select username, password from logins order by id desc')
+	cur = db.execute('select username, password from logins order by id asc')
 	logins = cur.fetchall()
 	return render_template("home.html", logins=logins)
 
@@ -25,9 +25,16 @@ def home():
 def login():
 	return render_template("login.html")
 
-@app.route("/signup") 
+@app.route("/signup", methods=["POST", "GET"]) 
 def signup():
-	return render_template("signup.html")
+	if request.method == "POST":
+		db = get_db()
+		db.execute('insert into logins (username, password) values (?, ?)',
+                 [request.form['username'], request.form['password']])
+		db.commit()
+		return redirect("/")
+	else:
+		return render_template("signup.html")
 
 def connect_db():
     """Connects to the specific database."""
@@ -60,16 +67,6 @@ def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
-
-
-@app.route('/add', methods=['POST'])
-def add_entry():
-    db = get_db()
-    db.execute('insert into logins (username, password) values (?, ?)',
-                 [request.form['username'], request.form['password']])
-    db.commit()
-    flash('New entry was successfully posted')
-    return render_template("home.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
