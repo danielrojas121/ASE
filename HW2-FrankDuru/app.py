@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template
 from flaskext.mysql import MySQL
 
 app = Flask(__name__)
@@ -12,15 +12,20 @@ app.config['MYSQL_DATABASE_DB'] = 'Vanmo'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
+conn = mysql.connect()
+cursor = conn.cursor()
+
 @app.route("/")
 def home():
-	conn = mysql.connect()
-	cursor = conn.cursor()
-	cursor.execute("SELECT VERSION()")
-	data = cursor.fetchone()
-	conn.close()
-	return "Database version : %s " % data
-	#return render_template("index.html")
+    #cursor.execute("SELECT VERSION()")
+    #data = cursor.fetchone()
+    #return "Database version : %s " % data
+    return render_template("index.html")
+
+@app.teardown_appcontext
+def close_connection():
+    if hasattr(conn, 'connection'):
+        conn.close()
 
 if __name__ == "__main__":
     app.run()
