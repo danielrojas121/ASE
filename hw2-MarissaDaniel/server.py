@@ -16,7 +16,10 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 @app.route("/")
 def home():
-	return render_template("home.html")
+	db = get_db()
+	cur = db.execute('select username, password from logins order by id desc')
+	logins = cur.fetchall()
+	return render_template("home.html", logins=logins)
 
 @app.route("/login")
 def login():
