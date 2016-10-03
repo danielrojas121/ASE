@@ -1,32 +1,35 @@
+''' Using Flask framework '''
 from flask import Flask, render_template
 from flaskext.mysql import MySQL
 
-app = Flask(__name__)
-app.config["DEBUG"] = True  # Only include this while you are testing your app
-mysql = MySQL()
+APP = Flask(__name__)
+APP.config["DEBUG"] = True  # Only include this while you are testing your app
+MYSQL = MySQL()
 
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'frankcabada'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'Fc182641!'
-app.config['MYSQL_DATABASE_DB'] = 'Vanmo'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
-mysql.init_app(app)
+APP.config['MYSQL_DATABASE_USER'] = 'frankcabada'
+APP.config['MYSQL_DATABASE_PASSWORD'] = 'Fc182641!'
+APP.config['MYSQL_DATABASE_DB'] = 'Vanmo'
+APP.config['MYSQL_DATABASE_HOST'] = 'localhost'
+MYSQL.init_app(APP)
 
-conn = mysql.connect()
-cursor = conn.cursor()
+CONN = MYSQL.connect()
+CURSOR = CONN.cursor()
 
-@app.route("/")
+@APP.route("/")
 def home():
+    ''' function called on landing page '''
     #cursor.execute("SELECT VERSION()")
     #data = cursor.fetchone()
     #return "Database version : %s " % data
     return render_template("index.html")
 
-@app.teardown_appcontext
-def close_connection():
-    if hasattr(conn, 'connection'):
-        conn.close()
+@APP.teardown_appcontext
+def close_connection(error):
+    ''' function called on termination of app.py '''
+    if hasattr(CONN, 'connection'):
+        CONN.close()
+    return error
 
 if __name__ == "__main__":
-    app.run()
-
+    APP.run()
