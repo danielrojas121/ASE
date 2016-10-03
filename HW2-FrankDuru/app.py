@@ -44,8 +44,13 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        CURSOR.execute("""INSERT INTO `user` (`user_username`, `user_password`)
-            VALUES ('%s', '%s')""" % (username, password))
+        try:
+            CURSOR.execute("""INSERT INTO `user` (`user_username`, `user_password`)
+                VALUES ('%s', '%s')""" % (username, password))
+            CONN.commit()
+        except CONN.Error as error:
+            print error
+            CONN.rollback()
         return redirect("/")
     else:
         return render_template("signup.html")
