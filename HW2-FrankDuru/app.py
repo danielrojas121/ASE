@@ -18,11 +18,21 @@ CURSOR = CONN.cursor()
 
 @APP.route("/")
 def home():
-    ''' function called on landing page '''
+    ''' load landing page '''
     #cursor.execute("SELECT VERSION()")
     #data = cursor.fetchone()
     #return "Database version : %s " % data
     return render_template("index.html")
+
+@APP.route("/login", methods=['POST'])
+def login():
+    ''' check database to verify user data and login if allowed '''
+    return render_template("home.html")
+
+@APP.route("/signup", methods=['POST'])
+def signup():
+    ''' redirect user to sign up page to create an account '''
+    return render_template("signup.html")
 
 @APP.teardown_appcontext
 def close_connection(error):

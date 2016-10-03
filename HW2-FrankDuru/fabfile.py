@@ -16,6 +16,6 @@ def run_app():
 Possible test cases:
 
 - Check DB connection
-- 
+- Check that html pages exist
 
 '''
