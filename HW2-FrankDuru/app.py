@@ -28,7 +28,14 @@ def home():
 def login():
     ''' check database to verify user data and login if allowed '''
     #return render_template("home.html")
-    return render_template("home.html")
+    _name = request.form['usr']
+    _password = request.form['pwd']
+    CURSOR.execute("SELECT * from user WHERE user_username=%s AND user_password=%s" % (_name, _password))
+    data = CURSOR.fetchone()
+    if data is None:
+        return "Wrong Input"
+    else:
+        return render_template("home.html")
 
 @APP.route("/signup", methods=['POST'])
 def signup():
