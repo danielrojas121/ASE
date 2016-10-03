@@ -10,7 +10,7 @@ MYSQL = MySQL(APP)
 APP.config['MYSQL_DATABASE_USER'] = 'frankcabada'
 APP.config['MYSQL_DATABASE_PASSWORD'] = 'Fc182641!'
 APP.config['MYSQL_DATABASE_DB'] = 'Vanmo'
-APP.config['MYSQL_DATABASE_HOST'] = 'localhost'
+APP.config['MYSQL_DATABASE_HOST'] = '209.2.221.191'
 MYSQL.init_app(APP)
 
 CONN = MYSQL.connect()
