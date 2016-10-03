@@ -12,7 +12,7 @@
 		<div class="container">
 			<h2>Vanmo</h2>
 			<p>Your gateway to Wall Street</p>
-			<form>
+			<form action="/login" method="Post" id="login">
 				<div class="form-group">
 					<div class="col-xs-4">
 						<label for="usr">Username:</label>
@@ -22,10 +22,12 @@
 						<label for="pwd">Password:</label>
 						<input type="password" class="form-control" id="pwd">
 					</div>
-					<button type ="button" class="btn btn-default pull-down">Sign In</button>
+					<button type ="submit" form="login" value="Submit" class="btn btn-default pull-down">Log In</button>
 				</div>	
 			</form>
-			<button type ="button" class="btn btn-success pull up">Sign Up</button>
+			<form action="/signup" method="Post" id="signup">
+				<button type ="submit" form="signup" value="Submit" class="btn btn-success pull up">Sign Up</button>
+			</form>
 		</div>
 	</body>
 </html>

@@ -4,7 +4,7 @@ from flaskext.mysql import MySQL
 
 APP = Flask(__name__)
 APP.config["DEBUG"] = True  # Only include this while you are testing your app
-MYSQL = MySQL()
+MYSQL = MySQL(APP)
 
 # MySQL configurations
 APP.config['MYSQL_DATABASE_USER'] = 'frankcabada'
@@ -27,6 +27,7 @@ def home():
 @APP.route("/login", methods=['POST'])
 def login():
     ''' check database to verify user data and login if allowed '''
+    #return render_template("home.html")
     return render_template("home.html")
 
 @APP.route("/signup", methods=['POST'])
