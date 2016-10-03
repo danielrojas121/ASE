@@ -1,5 +1,5 @@
 ''' Using Flask framework '''
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flaskext.mysql import MySQL
 
 APP = Flask(__name__)
@@ -24,23 +24,31 @@ def home():
     #return "Database version : %s " % data
     return render_template("index.html")
 
-@APP.route("/login", methods=['POST'])
+@APP.route("/login", methods=['POST', 'GET'])
 def login():
     ''' check database to verify user data and login if allowed '''
     #return render_template("home.html")
-    _name = request.form['usr']
-    _password = request.form['pwd']
-    CURSOR.execute("SELECT * from user WHERE user_username=%s AND user_password=%s" % (_name, _password))
+    username = request.form['usr']
+    password = request.form['pwd']
+    CURSOR.execute("""SELECT * from `user` WHERE `user_username`='%s' AND
+    	`user_password`='%s'""" % (username, password))
     data = CURSOR.fetchone()
     if data is None:
         return "Wrong Input"
     else:
         return render_template("home.html")
 
-@APP.route("/signup", methods=['POST'])
+@APP.route("/signup", methods=['POST', 'GET'])
 def signup():
     ''' redirect user to sign up page to create an account '''
-    return render_template("signup.html")
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        CURSOR.execute("""INSERT INTO `user` (`user_username`, `user_password`)
+            VALUES ('%s', '%s')""" % (username, password))
+        return redirect("/")
+    else:
+        return render_template("signup.html")
 
 @APP.teardown_appcontext
 def close_connection(error):
