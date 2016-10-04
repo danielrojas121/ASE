@@ -1,12 +1,9 @@
 from fabric.api import local
 
-def build_file():
-	static_analyzer()
-	run_server()
-
-
 def run_server():
-	local("python server.py")
+	local("export FLASK_APP=server.py")
+	local("flask initdb")
+	local("flask run")
 
 def static_analyzer():
 	local("pylint server.py")

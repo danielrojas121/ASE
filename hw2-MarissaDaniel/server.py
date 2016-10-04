@@ -1,3 +1,8 @@
+"""
+    Server
+    Marisssa Ojeda
+    Daniel Rojas
+"""
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, render_template, request, g, redirect
@@ -16,6 +21,7 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 @app.route("/")
 def home():
+    """Home page showing usernames and passwords."""
     db = get_db()
     cur = db.execute('select username, password from logins order by id asc')
     logins = cur.fetchall()
@@ -23,14 +29,16 @@ def home():
 
 @app.route("/login")
 def login():
+    """Login page."""
     return render_template("login.html")
 
-@app.route("/signup", methods=["POST", "GET"]) 
+@app.route("/signup", methods=["POST", "GET"])
 def signup():
+    """Signup page where people can add username and password."""
     if request.method == "POST":
         db = get_db()
         db.execute('insert into logins (username, password) values (?, ?)',
-                 [request.form['username'], request.form['password']])
+                   [request.form['username'], request.form['password']])
         db.commit()
         return redirect("/")
     else:
@@ -43,6 +51,7 @@ def connect_db():
     return rv
 
 def init_db():
+    """Initializes db"""
     db = get_db()
     with app.open_resource('schema.sql', mode='r') as f:
         db.cursor().executescript(f.read())
