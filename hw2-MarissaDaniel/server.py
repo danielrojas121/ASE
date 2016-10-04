@@ -27,11 +27,6 @@ def home():
     logins = cur.fetchall()
     return render_template("home.html", logins=logins)
 
-@app.route("/login")
-def login():
-    """Login page."""
-    return render_template("login.html")
-
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
     """Signup page where people can add username and password."""
