@@ -6,7 +6,6 @@ def static_analyzer():
 def init_server():
 	local("export FLASK_APP=server.py")
 	local("flask initdb")
-	local("flask run")
 
 def run_server():
 	local("flask run")
