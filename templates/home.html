@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+         <title>Vanmo</title>
+    </head>
+    <body>
+        <h1>Welcome to Vanmo!</h1>
+    
+    <p>Click <a href="/signup">here</a> to sign up!</p>
+
+    <h3>List of users currently in database:</h3>
+
+    <ol class="logins">
+ 	{% for entry in logins %}
+    <li><p>Username: {{ entry.username }}</p><p>Password: {{ entry.password }}</p></li>
+  	{% endfor %}
+  	</ol>
+
+</body>
+</html>
