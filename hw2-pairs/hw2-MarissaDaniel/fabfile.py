@@ -1,4 +1,4 @@
-from fabric.api import local
+from fabric.api import local, shell_env
 from fabric.utils import abort
 import os.path
 
@@ -10,13 +10,14 @@ def static_analyzer():
 
 def init_server():
 	'''Initializes the database'''
-	local("export FLASK_APP=server.py")
-	local("flask initdb")
+	with shell_env(FLASK_APP='server.py'):
+		local("flask initdb")
 
 def run_server():
 	'''Runs the application'''
 	verify_files()
-	local("flask run")
+	with shell_env(FLASK_APP='server.py'):
+		local("flask run")
 
 def verify_files():
     '''test that all html files used in app.py exist in templates folder'''
