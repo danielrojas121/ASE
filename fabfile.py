@@ -1,11 +1,15 @@
-from fabric.api import local
+from fabric.api import local, shell_env
 
 def static_analyzer():
+	'''Runs Pylint analyzer'''
 	local("pylint app.py")
 
 def init_server():
-	local("export FLASK_APP=app.py")
-	local("flask initdb")
+	'''Initializes the database'''
+	with shell_env(FLASK_APP='app.py'):
+		local("flask initdb")
 
 def run_server():
-	local("flask run")
+	'''Runs the application'''
+	with shell_env(FLASK_APP='app.py'):
+		local("flask run")
