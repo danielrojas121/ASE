@@ -1,4 +1,4 @@
-from fabric.api import local
+from fabric.api import local, shell_env
 import platform
 
 def prepare_deploy():
@@ -7,20 +7,22 @@ def prepare_deploy():
 	run_server()
 
 def static_analyzer():
+	'''Runs Pylint analyzer'''
 	local("pylint app.py")
 
 def init_server():
+	'''Initializes the server'''
 	if (platform.system() == 'Windows'):
-		windows_init()
+		local("set FLASK_APP=app.py")
+		local("flask initdb")
 	else:
-		default_init()
-	local("flask initdb")
-
-def default_init():
-	local("export FLASK_APP=app.py")
-
-def windows_init():
-	local("set FLASK_APP=app.py")
+		with shell_env(FLASK_APP='app.py'):
+			local("flask initdb")
 
 def run_server():
-	local("flask run")
+	'''Runs the application'''
+	if (platform.system() == 'Windows'):
+		local("flask run")
+	else:
+		with shell_env(FLASK_APP='app.py'):
+			local("flask run")
