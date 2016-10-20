@@ -39,6 +39,12 @@ def signup():
     else:
         return render_template("signup.html")
 
+# EDIT THIS SO THAT CAN ONLY ACCESS WHEN USER IS SIGNED IN
+@APP.route("/add_bank_account", methods=["POST", "GET"])
+def add_bank_account():
+    """Page to redirect to when user chooses to create new bank accounts"""
+    return render_template("add_bank_account.html")
+
 def connect_db():
     """Connects to the specific database."""
     db_rv = sqlite3.connect(APP.config['DATABASE'])
