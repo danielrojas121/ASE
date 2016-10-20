@@ -14,7 +14,7 @@ APP.config.from_object(__name__)
 APP.config["DEBUG"] = True  # Only  include this while you are testing your APP
 
 APP.config.update(dict(
-    DATABASE=os.path.join(APP.root_path, 'vanmo.sql_db'),
+    DATABASE=os.path.join(APP.root_path, 'vanmo.db'),
     SECRET_KEY='development key',
     USERNAME='admin',
     PASSWORD='default'
