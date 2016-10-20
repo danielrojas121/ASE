@@ -2,6 +2,8 @@
     Server
     Marisssa Ojeda
     Daniel Rojas
+    Frank Cabada
+    Duru Kahyaoglu
 """
 import os
 from sqlite3 import dbapi2 as sqlite3
