@@ -1,28 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <head>
-         <title>Vanmo</title>
-    </head>
+  <head>
+    <title>Vanmo</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <div class="container">
+
+      <!-- Static navbar -->
+      <!-- try changing the nav class from navbar-default to navbar-inverse -->
+      <!-- try adding navbar-fixed-top or navbar-fixed-bottom to the class-->
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Vanmo</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/">Home</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+    </div>
     <body>
-        <h1>Sign up!</h1>
-    
+      <h2><center>Sign Up Today and Master Personal Finance!</center></h2>
+      <form class = "form-signin" action="/signup" method="Post" id="signup">
+        <div class="col-xs-4"> 
+          <label  for="inputName" class="sr-only">Username</label>
+          <input type="name" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
+        </div>
+        <div class="col-xs-4">
+          <label  for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required autofocus>
+        </div>
+        <button id="btnSignUp" class="btn btn-link" type="submit" form="signup" value="Submit">Sign Up!</button>
+      </form>
+  </head>
+  </html>
 
-		<h2>Sign up Form</h2>
 
-<form action="/signup" method ="post">
-
-  <div class="container">
-    <label><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="username" required>
-
-    <label><b>Password</b></label>
-    <input type="text" placeholder="Enter Password" name="password" required>
-        
-    <button type="submit">Sign up</button>
-  </div>
-</form>
-<p>Click <a href="/">here</a> to go back to home.</p>
-
-</body>
-</html>
-
+  
