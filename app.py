@@ -47,6 +47,11 @@ def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     return render_template("add_bank_account.html")
 
+@APP.route("/view_current_account", methods=["POST", "GET"])
+def view_current_account():
+    """Page to redirect to when user chooses to create new bank accounts"""
+    return render_template("add_bank_account.html")
+
 def connect_db():
     """Connects to the specific database."""
     db_rv = sqlite3.connect(APP.config['DATABASE'])
