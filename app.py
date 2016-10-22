@@ -45,7 +45,18 @@ def signup():
 @APP.route("/add_bank_account", methods=["POST", "GET"])
 def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
-    return render_template("add_bank_account.html")
+    if request.method == "POST":
+        sql_db = get_db()
+        sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)', [request.form['accountname'], request.form['type'], request.form['balance']])
+        sql_db.commit()
+        cur = sql_db.execute('select * from accounts')
+        accounts = cur.fetchall()
+        return render_template("add_bank_account.html", accounts=accounts)
+    else:
+        sql_db = get_db()
+        cur = sql_db.execute('select * from accounts')
+        accounts = cur.fetchall()
+        return render_template("add_bank_account.html", accounts=accounts)
 
 @APP.route("/view_current_account", methods=["POST", "GET"])
 def view_current_account():

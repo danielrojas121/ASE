@@ -21,8 +21,6 @@
 
   <body>
 
-    <div class="container">
-
       <!-- Static navbar -->
       <!-- try changing the nav class from navbar-default to navbar-inverse -->
       <!-- try adding navbar-fixed-top or navbar-fixed-bottom to the class-->
@@ -54,45 +52,50 @@
 
       <div id="new-account-form"> 
       	<h3>New Bank Account Info</h3>
-      	<form class="form">
+      	<form class="form" action="/add_bank_account" method="post">
       	<!--try adding has-success, has-warning, and has-danger to the class-->
       	  <div class="form-group row">
-      	    <label class="sr-only">Name</label>
+      	    <label class="sr-only">Account Name</label>
       	    <div class="col-sm-8">
-              <input type="text" class="form-control" id="account_name" placeholder="Name">
+              <input type="text" class="form-control" name="accountname" id = "accountname" placeholder="Account Name" required>
             </div>
       	  </div>
           <div class="form-group row">
-            <label class="sr-only">Bank</label>
+            <label class="sr-only">Type</label>
             <div class="col-sm-8">
-              <input type="text" class="form-control" id="bank_name" placeholder="Bank">
+              <input type="text" class="form-control" name="type" id = "type" placeholder="Checking/Savings" required>
             </div>
           </div>
-      	  <div class="form-check">
-      	    <label class="form-check-label">
-      	      <input class="form-check-input" type="radio" name="account_type" id="account_type1" value="checking" checked> Checking
-      	    </label>
-          <div class="form-check">
-            <label class="form-check-label">
-              <input class="form-check-input" type="radio" name="account_type" id="account_type2" value="savings"> Savings
-            </label>
-      	  </div>
+          <div class="form-group row">
+            <label class="sr-only">Balance</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" name="balance" id= "balance" placeholder="Balance" required>
+            </div>
+          </div>
       	  <button type="submit" class="btn btn-default btn-primary">Add Account</button>
       	</form>
       </div>
 
-      <!-- try adding table-striped, table-bordered, or table-hover as a class to the table element -->
+    <div class="container">
+
+            <!-- try adding table-striped, table-bordered, or table-hover as a class to the table element -->
       <div id="accounts-table"> 
-      	<h3>Current Bank Accounts</h3>
-      	<table class="table table-stripe d"> 
-      		<thead> 
-      			<tr><th>Name</th> <th>Type</th> <th>Bank</th> <th>Account #</th></tr> 
-      		</thead> 
-      		<tbody> 
-      			<tr><td>CHASE COLLEGE</td> <td>CHECKING</td> <td>CHASE</td> <th scope="row">XXXX-XXXX-XXXX-0001</th></tr>
-      			<tr><td>CHASE SAVINGS</td> <td>SAVINGS</td> <td>CHASE</td> <th scope="row">XXXX-XXXX-XXXX-0002</th></tr>
-      		</tbody>
-      	</table>
+        <h3>Current Bank Accounts</h3>
+        <class="accounts">
+        <table class="table table-stripe d"> 
+          <thead> 
+            <tr><th>Name</th> <th>Type</th> <th>Balance</th></tr> 
+          </thead> 
+          <tbody> 
+            {% for entry in accounts %}
+            <tr>
+              <td>{{ entry.accountname }}</td> 
+              <td>{{ entry.type }}</td> 
+              <td>{{ entry.balance }}</td> 
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
 
     </div> <!-- /container -->

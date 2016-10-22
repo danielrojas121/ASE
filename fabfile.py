@@ -4,7 +4,6 @@ from fabric.api import local, shell_env
 
 def prepare_deploy():
     '''Run all tests, initialize server and db, and run app'''
-    static_analyzer()
     init_server()
     run_server()
 
