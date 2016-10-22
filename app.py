@@ -59,7 +59,7 @@ def add_bank_account():
         sql_db.commit()
         cur = sql_db.execute('select * from accounts')
         accounts = cur.fetchall()
-        return render_template("add_bank_account.html", accounts=accounts)
+        return render_template("view_current_account.html", accounts=accounts)
     else:
         sql_db = get_db()
         cur = sql_db.execute('select * from accounts')
