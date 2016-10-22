@@ -21,13 +21,21 @@ APP.config.update(dict(
 ))
 APP.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
-@APP.route("/")
+@APP.route("/", methods=["POST", "GET"])
 def home():
     """Home page showing usernames and passwords."""
-    sql_db = get_db()
-    cur = sql_db.execute('select username, password from logins order by id asc')
-    logins = cur.fetchall()
-    return render_template("home.html", logins=logins)
+    if request.method == "POST":
+        sql_db = get_db()
+        username = request.form['usr']
+        password = request.form['pwd']
+        cur = sql_db.execute('select * from logins where username = ? and password = ?', [username, password])
+        login = cur.fetchone()
+        if login is None:
+            return redirect("/")
+        else:
+            return redirect("/view_current_account")
+    else:
+        return render_template("home.html")
 
 @APP.route("/signup", methods=["POST", "GET"])
 def signup():
