@@ -66,10 +66,14 @@ def add_bank_account():
         accounts = cur.fetchall()
         return render_template("add_bank_account.html", accounts=accounts)
 
-@APP.route("/view_current_account", methods=["POST", "GET"])
+@APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
+    sql_db = get_db()
+    cur = sql_db.execute('select * from accounts')
+    accounts = cur.fetchall()
+    return render_template("view_current_account.html", accounts=accounts)
     """Page to redirect to when user chooses to create new bank accounts"""
-    return render_template("view_current_account.html")
+
 
 def connect_db():
     """Connects to the specific database."""
