@@ -28,7 +28,8 @@ def home():
         sql_db = get_db()
         username = request.form['usr']
         password = request.form['pwd']
-        cur = sql_db.execute('select * from logins where username = ? and password = ?', [username, password])
+        cur = sql_db.execute('''select * from logins where username = ?
+            and password = ?''', [username, password])
         login = cur.fetchone()
         if login is None:
             return redirect("/")
@@ -55,7 +56,9 @@ def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     if request.method == "POST":
         sql_db = get_db()
-        sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)', [request.form['accountname'], request.form['type'], request.form['balance']])
+        sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
+                       [request.form['accountname'], request.form['type'],
+                        request.form['balance']])
         sql_db.commit()
         cur = sql_db.execute('select * from accounts')
         accounts = cur.fetchall()
@@ -68,12 +71,11 @@ def add_bank_account():
 
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
+    """Page to redirect to when user chooses to create new bank accounts"""
     sql_db = get_db()
     cur = sql_db.execute('select * from accounts')
     accounts = cur.fetchall()
     return render_template("view_current_account.html", accounts=accounts)
-    """Page to redirect to when user chooses to create new bank accounts"""
-
 
 def connect_db():
     """Connects to the specific database."""
