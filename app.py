@@ -113,4 +113,4 @@ def close_db(error):
         print error
 
 if __name__ == "__main__":
-    APP.run(host="0.0.0.0")
+    APP.run(host="0.0.0.0", threaded=True)
