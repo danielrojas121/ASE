@@ -63,10 +63,10 @@ def add_bank_account():
         return redirect("/")
     else:
         if request.method == "POST":
+            balance = int(request.form['account_balance'])
             sql_db = get_db()
             sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
-                           [request.form['account_name'], request.form['account_type'],
-                            request.form['balance']])
+                           [request.form['account_name'], request.form['account_type'], balance])
             sql_db.commit()
             cur = sql_db.execute('select * from accounts')
             accounts = cur.fetchall()
