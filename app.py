@@ -27,7 +27,7 @@ def home():
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
-        return render_template("view_current_account.html")
+        return redirect("/view_current_account")
 
 @APP.route('/login', methods=['POST'])
 def user_login():
