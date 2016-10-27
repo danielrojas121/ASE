@@ -7,7 +7,7 @@
 """
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask import Flask, flash, render_template, request, g, redirect, Response, session
+from flask import Flask, flash, render_template, request, g, redirect, session
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -23,18 +23,20 @@ APP.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 @APP.route("/", methods=["POST", "GET"])
 def home():
-    """Home page showing usernames and passwords."""
+    """Home function to render view accounts or login page."""
     if not session.get('logged_in'):
-        return render_template('index.html')  
+        return render_template('index.html')
     else:
         return render_template("view_current_account.html")
 
 @APP.route('/login', methods=['POST'])
 def user_login():
+    '''Log in user'''
     username = request.form['usr']
     password = request.form['pwd']
     sql_db = get_db()
-    cur = sql_db.execute('select * from logins where username = ? and password = ?', [username, password])
+    cur = sql_db.execute('select * from logins where username = ? and password = ?',
+                         [username, password])
     login = cur.fetchone()
     if login is None:
         flash('Wrong username or password!')
@@ -58,7 +60,7 @@ def signup():
 def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     if not session.get('logged_in'):
-        return redirect("/")   
+        return redirect("/")
     else:
         if request.method == "POST":
             sql_db = get_db()
@@ -79,7 +81,7 @@ def add_bank_account():
 def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     if not session.get('logged_in'):
-        return redirect("/")  
+        return redirect("/")
     else:
         sql_db = get_db()
         cur = sql_db.execute('select * from accounts')
@@ -91,6 +93,7 @@ def view_current_account():
 
 @APP.route("/logout")
 def logout():
+    '''Logout user'''
     session['logged_in'] = False
     return redirect("/")
 
