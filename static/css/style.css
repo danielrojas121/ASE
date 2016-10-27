@@ -12,3 +12,8 @@ button
 	height:auto;
 	display:inline-block;
 }
+
+form .sign-in
+{
+	text-align: center;
+}

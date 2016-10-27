@@ -5,30 +5,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
     <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  </head>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <div class="container">
-
-      <!-- Static navbar -->
-      <!-- try changing the nav class from navbar-default to navbar-inverse -->
-      <!-- try adding navbar-fixed-top or navbar-fixed-bottom to the class-->
-      <!--<nav class="navbar navbar-inverse">
-        <!-- <div class="container-fluid"> 
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Vanmo</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="/">Home</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        <!--</div><!--/.container-fluid -->
     <body>
       <nav class="navbar navbar-inverse">
         <div class="container-fluid"> 
@@ -43,38 +21,49 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="/">Home</a></li>
+              <!--<li class="active"><a href="/">Home</a></li>-->
             </ul>
           </div>
-        </div>  <!--/.nav-collapse -->
-        <!--</div><!--/.container-fluid -->
+        </div>  
       </nav>
+
+      <div>
       <h2><center>Sign Up Today and Master Personal Finance!</center></h2>
-      <form class = "form-signin" action="/signup" method="Post" id="signup">
-        <div class="col-xs-4"> 
-          <label  for="inputName" class="sr-only">Username</label>
-          <input type="name" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
+        <div>
+          <form class="form-signin" action="/signup" method="POST" id="signup">
+          <center>
+            <div class="form-group">
+              <div class="col-xs-4"> 
+                <label  for="inputName" class="sr-only">Username</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="Username" required autofocus>
+              </div>
+              <div class="col-xs-4">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required autofocus>
+              </div>
+              <div>
+                <button id="btnSignUp" class="btn btn-default" type="submit" form="signup" value="Submit">Sign Up!</button>
+              </div>
+            </div>
+            </center>
+          </form>
         </div>
-        <div class="col-xs-4">
-          <label  for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required autofocus>
+        <div class="container">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                  {{ message }}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         </div>
-        <button id="btnSignUp" class="btn btn-link" type="submit" form="signup" value="Submit">Sign Up!</button>
-      </form>
+      </div>
+
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <div class="container">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-              {{ message }}
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-  </div>
-      </body>
-  </head>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
   </html>
 
 
