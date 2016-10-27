@@ -74,8 +74,10 @@ def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     sql_db = get_db()
     cur = sql_db.execute('select * from accounts')
+    cur2 = sql_db.execute('select * from logins')
     accounts = cur.fetchall()
-    return render_template("view_current_account.html", accounts=accounts)
+    logins = cur2.fetchall()
+    return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 def connect_db():
     """Connects to the specific database."""

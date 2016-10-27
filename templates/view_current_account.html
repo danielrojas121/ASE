@@ -16,7 +16,7 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="navbar.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
   </head>
 
   <body>
@@ -58,6 +58,19 @@
     <div class="container">
 
             <!-- try adding table-striped, table-bordered, or table-hover as a class to the table element -->
+      <div id="greetings"> 
+        <!--<h3>Welcome Back!</h3> -->
+        <class="logins">
+          <tbody> 
+            {% for entry in logins %}
+            <tr>
+              <h3>Welcome Back <td>{{ entry.username }}</td></h3> 
+            </tr>
+            {% endfor %}
+          </tbody>
+      </div>
+      
+
       <div id="accounts-table"> 
         <h3>Current Bank Accounts</h3>
         <class="accounts">
