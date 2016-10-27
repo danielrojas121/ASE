@@ -10,7 +10,7 @@
 	<div class="container">
 		<h2>Welcome to Vanmo</h2>
 		<br></br>
-		<form action="/" method="Post" id="login">
+		<form action="/login" method="Post" id="login">
 			<div class="form-group">
 				<div class="col-xs-4">
 					<label for="usr">Username:</label>
@@ -26,6 +26,15 @@
 		<form action="/signup" method="Get" id="signup">
 			<button type ="submit" form="signup" value="Submit" class="btn btn-success pull up">Sign Up</button>
 		</form>
+	</div>
+	<div class="container">
+		{% with messages = get_flashed_messages() %}
+	   		{% if messages %}
+	      		{% for message in messages %}
+	         		{{ message }}
+	      		{% endfor %}
+	   		{% endif %}
+		{% endwith %}
 	</div>
 </body>
 

@@ -7,7 +7,10 @@
 """
 import os
 from sqlite3 import dbapi2 as sqlite3
-from flask import Flask, render_template, request, g, redirect
+from flask import Flask, flash, render_template, request, g, redirect, Response, session
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
+from flask_wtf import Form
+
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -24,19 +27,23 @@ APP.config.from_envvar('FLASKR_SETTINGS', silent=True)
 @APP.route("/", methods=["POST", "GET"])
 def home():
     """Home page showing usernames and passwords."""
-    if request.method == "POST":
-        sql_db = get_db()
-        username = request.form['usr']
-        password = request.form['pwd']
-        cur = sql_db.execute('''select * from logins where username = ?
-            and password = ?''', [username, password])
-        login = cur.fetchone()
-        if login is None:
-            return redirect("/")
-        else:
-            return redirect("view_current_account")
+    if not session.get('logged_in'):
+        return render_template('index.html')  
     else:
-        return render_template("index.html")
+        return render_template("view_current_account.html")
+
+@APP.route('/login', methods=['POST'])
+def user_login():
+    username = request.form['usr']
+    password = request.form['pwd']
+    sql_db = get_db()
+    cur = sql_db.execute('select * from logins where username = ? and password = ?', [username, password])
+    login = cur.fetchone()
+    if login is None:
+        flash('Wrong username or password!')
+    else:
+        session['logged_in'] = True
+    return home()
 
 @APP.route("/signup", methods=["POST", "GET"])
 def signup():
@@ -53,30 +60,42 @@ def signup():
 @APP.route("/add_bank_account", methods=["POST", "GET"])
 def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
-    if request.method == "POST":
-        sql_db = get_db()
-        sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
-                       [request.form['accountname'], request.form['type'],
-                        request.form['balance']])
-        sql_db.commit()
-        cur = sql_db.execute('select * from accounts')
-        accounts = cur.fetchall()
-        return render_template("view_current_account.html", accounts=accounts)
+    if not session.get('logged_in'):
+        return redirect("/")   
     else:
-        sql_db = get_db()
-        cur = sql_db.execute('select * from accounts')
-        accounts = cur.fetchall()
-        return render_template("add_bank_account.html", accounts=accounts)
+        if request.method == "POST":
+            sql_db = get_db()
+            sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
+                           [request.form['accountname'], request.form['type'],
+                            request.form['balance']])
+            sql_db.commit()
+            cur = sql_db.execute('select * from accounts')
+            accounts = cur.fetchall()
+            return render_template("view_current_account.html", accounts=accounts)
+        else:
+            sql_db = get_db()
+            cur = sql_db.execute('select * from accounts')
+            accounts = cur.fetchall()
+            return render_template("add_bank_account.html", accounts=accounts)
 
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
-    sql_db = get_db()
-    cur = sql_db.execute('select * from accounts')
-    cur2 = sql_db.execute('select * from logins')
-    accounts = cur.fetchall()
-    logins = cur2.fetchall()
-    return render_template("view_current_account.html", accounts=accounts, logins=logins)
+    if not session.get('logged_in'):
+        return redirect("/")  
+    else:
+        sql_db = get_db()
+        cur = sql_db.execute('select * from accounts')
+        cur2 = sql_db.execute('select * from logins')
+        accounts = cur.fetchall()
+        logins = cur2.fetchall()
+        return render_template("view_current_account.html", accounts=accounts, logins=logins)
+
+
+@APP.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return redirect("/")
 
 def connect_db():
     """Connects to the specific database."""
