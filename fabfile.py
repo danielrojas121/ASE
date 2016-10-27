@@ -6,12 +6,12 @@ def prepare_deploy():
     '''Run all tests, initialize server and db, and run app'''
     static_analyzer()
     run_tests()
-    init_server()
+    init_database()
     run_server()
 
 def quick_deploy():
-    '''No tests or static analysis, only use for repeated debugging'''
-    init_server()
+    '''No static analysis or test; only use for repeated debugging'''
+    init_database()
     run_server()
 
 def static_analyzer():
@@ -21,7 +21,7 @@ def static_analyzer():
 def run_tests():
     '''Perform tests here'''
 
-def init_server():
+def init_database():
     '''Initializes the server'''
     if platform.system() == 'Windows':
         # SET DOES NOT SEEM TO BE WORKING FROM HERE
@@ -32,7 +32,7 @@ def init_server():
             local('flask initdb')
 
 def run_server():
-    '''Runs the application'''
+    '''Runs the application w/o reinitializing the database'''
     if platform.system() == 'Windows':
         local('flask run')
     else:

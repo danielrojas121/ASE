@@ -34,9 +34,9 @@ def home():
         if login is None:
             return redirect("/")
         else:
-            return redirect("/view_current_account")
+            return redirect("view_current_account")
     else:
-        return render_template("home.html")
+        return render_template("index.html")
 
 @APP.route("/signup", methods=["POST", "GET"])
 def signup():
@@ -50,7 +50,6 @@ def signup():
     else:
         return render_template("signup.html")
 
-# EDIT THIS SO THAT CAN ONLY ACCESS WHEN USER IS SIGNED IN
 @APP.route("/add_bank_account", methods=["POST", "GET"])
 def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
