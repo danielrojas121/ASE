@@ -34,9 +34,9 @@ def home():
         if login is None:
             return redirect("/")
         else:
-            return redirect("/view_current_account")
+            return redirect("view_current_account")
     else:
-        return render_template("home.html")
+        return render_template("index.html")
 
 @APP.route("/signup", methods=["POST", "GET"])
 def signup():
@@ -50,7 +50,6 @@ def signup():
     else:
         return render_template("signup.html")
 
-# EDIT THIS SO THAT CAN ONLY ACCESS WHEN USER IS SIGNED IN
 @APP.route("/add_bank_account", methods=["POST", "GET"])
 def add_bank_account():
     """Page to redirect to when user chooses to create new bank accounts"""
@@ -74,8 +73,10 @@ def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
     sql_db = get_db()
     cur = sql_db.execute('select * from accounts')
+    cur2 = sql_db.execute('select * from logins')
     accounts = cur.fetchall()
-    return render_template("view_current_account.html", accounts=accounts)
+    logins = cur2.fetchall()
+    return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 def connect_db():
     """Connects to the specific database."""

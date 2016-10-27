@@ -16,70 +16,75 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link href="navbar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
   </head>
 
   <body>
 
-    <div class="container">
+    <!-- Static navbar -->
+    <!-- try changing the nav class from navbar-default to navbar-inverse -->
+    <!-- try adding navbar-fixed-top or navbar-fixed-bottom to the class-->
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Vanmo</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/add_bank_account">Add Account</a></li>
+            <li><a href="/" style="float:right">Logout</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
 
-      <!-- Static navbar -->
-      <!-- try changing the nav class from navbar-default to navbar-inverse -->
-      <!-- try adding navbar-fixed-top or navbar-fixed-bottom to the class-->
-      <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Vanmo</a>
-          </div>
-          <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="/add_bank_account">Add Account</a></li>
-              <li><a href="/" style="float:right">Logout</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </nav>
+    <!-- Main component for a primary marketing message or call to action -->
 
-      <!-- Main component for a primary marketing message or call to action -->
+    <div id="greetings"> 
+      <!--<h3>Welcome Back!</h3> -->
+      <class="logins">
+        <tbody> 
+          {% for entry in logins %}
+          <tr>
+            <h3>Welcome Back <td>{{ entry.username }}</td></h3> 
+          </tr>
+          {% endfor %}
+        </tbody>
+    </div>
+    
 
-      	<!--try adding has-success, has-warning, and has-danger to the class-->
-      	  <form action="/add_bank_account" method="GET">
-          <button type="submit" class="btn btn-default btn-primary" href="/add_bank_account">Add Account</button>
-        </form>
-  
-      <!-- try adding table-striped, table-bordered, or table-hover as a class to the table element -->
-    <div class="container">
+    <div id="accounts-table"> 
+      <h3>Current Bank Accounts</h3>
+      <class="accounts">
+      <table class="table table-stripe d"> 
+        <thead> 
+          <tr><th>Name</th> <th>Type</th> <th>Balance</th></tr> 
+        </thead> 
+        <tbody> 
+          {% for entry in accounts %}
+          <tr>
+            <td>{{ entry.accountname }}</td> 
+            <td>{{ entry.type }}</td> 
+            <td>{{ entry.balance }}</td> 
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 
-            <!-- try adding table-striped, table-bordered, or table-hover as a class to the table element -->
-      <div id="accounts-table"> 
-        <h3>Current Bank Accounts</h3>
-        <class="accounts">
-        <table class="table table-stripe d"> 
-          <thead> 
-            <tr><th>Name</th> <th>Type</th> <th>Balance</th></tr> 
-          </thead> 
-          <tbody> 
-            {% for entry in accounts %}
-            <tr>
-              <td>{{ entry.accountname }}</td> 
-              <td>{{ entry.type }}</td> 
-              <td>{{ entry.balance }}</td> 
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-    </div> <!-- /container -->
-
-
+    <!--try adding has-success, has-warning, and has-danger to the class-->
+    <div>
+      <form action="/add_bank_account" method="GET">
+        <button type="submit" class="btn btn-default btn-primary" href="/add_bank_account">Add Account</button>
+      </form>
+    </div>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -87,5 +92,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="static/js/add_bank_account.js"></script>
   </body>
 </html>
