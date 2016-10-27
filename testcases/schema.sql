@@ -7,9 +7,7 @@ create table logins (
 
 drop table if exists accounts;
 create table accounts (
-	id integer primary key autoincrement,
-	username text not null,
-	accountname text not null,
+	accountname text primary key,
 	type text not null,
 	balance integer not null
 );

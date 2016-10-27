@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vanmo</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+	<div class="container">
+		<h2>Welcome to Vanmo</h2>
+		<br></br>
+		<div>
+			<form action="/login" method="POST" id="login">
+				<!--<div class="form-group">
+					<div class="col-xs-4">
+						<label for="usr">Username:</label>
+						<input type="text" class="form-control" id="usr" name="usr">
+					</div>
+					<div class="col-xs-4">
+						<label for="pwd">Password:</label>
+						<input type="password" class="form-control" id="pwd" name="pwd">
+					</div> -->
+					<h3> Username: hiw    Password:   Empty </h3>
+
+					<button type ="submit" form="login" value="Submit" class="btn btn-default pull-down">Log In</button>
+				</div>  
+			</form>
+			<form action="/signup" method="GET" id="signup">
+				<button type ="submit" form="signup" value="Submit" class="btn btn-success pull up">Sign Up</button>
+			</form>
+		</div>
+	</div>
+	<div class="container">
+		{% with messages = get_flashed_messages() %}
+	   		{% if messages %}
+	      		{% for message in messages %}
+	         		{{ message }}
+	      		{% endfor %}
+	   		{% endif %}
+		{% endwith %}
+	</div>
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+
+</html>
