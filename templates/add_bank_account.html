@@ -80,11 +80,13 @@
       <class="accounts">
       <table class="table table-stripe d"> 
         <thead> 
-          <tr><th>Name</th> <th>Type</th> <th>Balance</th></tr> 
+          <tr> <th>ID</th> <th>Username</th> <th>Name</th> <th>Type</th> <th>Balance</th></tr> 
         </thead> 
         <tbody> 
           {% for entry in accounts %}
           <tr>
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.username }}
             <td>{{ entry.accountname }}</td> 
             <td>{{ entry.type }}</td> 
             <td>{{ entry.balance }}</td> 
