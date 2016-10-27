@@ -8,9 +8,6 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, Response, session
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
-from flask_wtf import Form
-
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -66,7 +63,7 @@ def add_bank_account():
         if request.method == "POST":
             sql_db = get_db()
             sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
-                           [request.form['accountname'], request.form['type'],
+                           [request.form['account_name'], request.form['account_type'],
                             request.form['balance']])
             sql_db.commit()
             cur = sql_db.execute('select * from accounts')
