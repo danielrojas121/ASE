@@ -48,15 +48,10 @@
     <!-- Main component for a primary marketing message or call to action -->
 
     <div id="greetings"> 
-      <!--<h3>Welcome Back!</h3> -->
       <class="logins">
-        <tbody> 
           {% for entry in logins %}
-          <tr>
-            <h3>Welcome Back <td>{{ entry.username }}</td></h3> 
-          </tr>
+            <h3>Welcome Back {{ entry.username }}!</h3> 
           {% endfor %}
-        </tbody>
     </div>
 
     <div id="accounts-table"> 
@@ -64,11 +59,13 @@
       <class="accounts">
       <table class="table table-stripe d"> 
         <thead> 
-          <tr><th>Name</th> <th>Type</th> <th>Balance</th></tr> 
+          <tr> <th>ID</th> <th>Username</th> <th>Name</th> <th>Type</th> <th>Balance</th> </tr> 
         </thead> 
         <tbody> 
           {% for entry in accounts %}
           <tr>
+            <td>{{ entry.id }}</td>
+            <td>{{ entry.username }}</td>
             <td>{{ entry.accountname }}</td> 
             <td>{{ entry.type }}</td> 
             <td>{{ entry.balance }}</td> 

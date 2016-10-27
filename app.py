@@ -42,6 +42,7 @@ def user_login():
         flash('Wrong username or password!')
     else:
         session['logged_in'] = True
+        session['username'] = username
     return home()
 
 @APP.route("/signup", methods=["POST", "GET"])
@@ -72,15 +73,14 @@ def add_bank_account():
         if request.method == "POST":
             balance = int(request.form['account_balance'])
             sql_db = get_db()
-            sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
-                           [request.form['account_name'], request.form['account_type'], balance])
+            sql_db.execute('insert into accounts (username, accountname, type, balance) values (?, ?, ?, ?)',
+                           [session.get('username'), request.form['account_name'],
+                           request.form['account_type'], balance])
             sql_db.commit()
-            cur = sql_db.execute('select * from accounts')
-            accounts = cur.fetchall()
-            return render_template("view_current_account.html", accounts=accounts)
+            return redirect("/")
         else:
             sql_db = get_db()
-            cur = sql_db.execute('select * from accounts')
+            cur = sql_db.execute('select * from accounts where username = ?', [session.get('username')])
             accounts = cur.fetchall()
             return render_template("add_bank_account.html", accounts=accounts)
 
@@ -91,8 +91,8 @@ def view_current_account():
         return redirect("/")
     else:
         sql_db = get_db()
-        cur = sql_db.execute('select * from accounts')
-        cur2 = sql_db.execute('select * from logins')
+        cur = sql_db.execute('select * from accounts where username = ?', [session.get('username')])
+        cur2 = sql_db.execute('select * from logins where username = ?', [session.get('username')])
         accounts = cur.fetchall()
         logins = cur2.fetchall()
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
