@@ -17,3 +17,13 @@ form .sign-in
 {
 	text-align: center;
 }
+
+.currencyinput 
+{
+	border: 0px inset #ccc;
+}
+
+.currencyinput input
+{
+	border: 0px;
+}

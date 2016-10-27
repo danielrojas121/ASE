@@ -24,8 +24,7 @@ def run_tests():
 def init_database():
     '''Initializes the server'''
     if platform.system() == 'Windows':
-        # SET DOES NOT SEEM TO BE WORKING FROM HERE
-        local("set FLASK_APP=app.py")
+        print("Must call command 'export FLASK_APP=app.py' before first run")
         local('flask initdb')
     else:
         with shell_env(FLASK_APP='app.py'):

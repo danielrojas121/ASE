@@ -70,7 +70,7 @@ def add_bank_account():
         return redirect("/")
     else:
         if request.method == "POST":
-            balance = int(request.form['account_balance'])
+            balance = (int(request.form['dollars']) * 100) + (int(request.form['cents']))
             sql_db = get_db()
             sql_db.execute('insert into accounts (accountname, type, balance) values (?, ?, ?)',
                            [request.form['account_name'], request.form['account_type'], balance])
