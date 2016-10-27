@@ -48,11 +48,18 @@ def user_login():
 def signup():
     """Signup page where people can add username and password."""
     if request.method == "POST":
+        username = request.form['username']
         sql_db = get_db()
-        sql_db.execute('insert into logins (username, password) values (?, ?)',
-                       [request.form['username'], request.form['password']])
-        sql_db.commit()
-        return redirect("/")
+        cur = sql_db.execute('select username from logins where username = ?', [username])
+        user = cur.fetchone()
+        if user is None:
+            sql_db.execute('insert into logins (username, password) values (?, ?)',
+                           [request.form['username'], request.form['password']])
+            sql_db.commit()
+            return redirect("/")
+        else:
+            flash('Please choose another username')
+            return redirect("/signup")
     else:
         return render_template("signup.html")
 
