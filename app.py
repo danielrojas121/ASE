@@ -80,9 +80,9 @@ def add_bank_account():
                 balance = (float(request.form['dollars'])) + (temp2/100)
                 sql_db = get_db()
                 sql_db.execute('''insert into accounts (username, accountname, type, balance) values
-                           (?, ?, ?, ?)''',
-                           [session.get('username'), request.form['account_name'],
-                            request.form['account_type'], balance])
+                               (?, ?, ?, ?)''',
+                               [session.get('username'), request.form['account_name'],
+                                request.form['account_type'], balance])
                 sql_db.commit()
                 return redirect("/")
         else:
