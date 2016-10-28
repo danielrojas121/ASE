@@ -1,0 +1,13 @@
+.open vanmo.db
+.print Logins table:
+select * from logins;
+.print
+.print Execute insert: insert into logins (username, password) values ("Jim", "pass");
+insert into logins (username, password) values ("Jim", "pass");
+.print Logins after insert:
+select * from logins;
+.print
+.print Execute delete: delete from logins where username = "Jim";
+delete from logins where username = "Jim";
+.print Logins after deletion:
+select * from logins;
