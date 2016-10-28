@@ -71,14 +71,20 @@ def add_bank_account():
         return redirect("/")
     else:
         if request.method == "POST":
-            balance = (int(request.form['dollars']) * 100) + (int(request.form['cents']))
-            sql_db = get_db()
-            sql_db.execute('''insert into accounts (username, accountname, type, balance) values
+            temp = request.form['cents']
+            if len(temp) > 2:
+                flash('Please enter 2 digits for decimal places')
+                return redirect("/add_bank_account")
+            else:
+                temp2 = float(temp)
+                balance = (float(request.form['dollars'])) + (temp2/100)
+                sql_db = get_db()
+                sql_db.execute('''insert into accounts (username, accountname, type, balance) values
                            (?, ?, ?, ?)''',
                            [session.get('username'), request.form['account_name'],
                             request.form['account_type'], balance])
-            sql_db.commit()
-            return redirect("/")
+                sql_db.commit()
+                return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',

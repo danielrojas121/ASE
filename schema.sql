@@ -11,5 +11,5 @@ create table accounts (
 	username text not null,
 	accountname text not null,
 	type text not null,
-	balance integer not null
+	balance real not null
 );
