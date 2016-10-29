@@ -24,6 +24,8 @@ We have an automated test that check database integrity. Run this with 'fab run_
 
 Using the system
 ------------------------------------------------------------------------------
+The following functionalities are included in Release 1.0 of this project:
+
 Login page:
 The login page is where a user will be first directed. The user can type a username and password to login.
 Login credentials can be created at the signup page which can be reached from the login page.
