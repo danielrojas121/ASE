@@ -8,6 +8,8 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, session
+from user import User
+from account import Account
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
