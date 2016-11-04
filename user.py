@@ -3,11 +3,11 @@ from account import Account
 
 class User(object):
 
-    def __init__(self, user_id, username, password):
+    def __init__(self, user_id, username, password, accounts=None):
         self.__user_id = user_id
         self.__username = username
         self.__password = password
-        self.__accounts = [] #list to keep track of this user's accounts
+        self.__accounts = accounts #list to keep track of this user's accounts
 
     def getUserId(self):
         return self.__user_id
