@@ -1,4 +1,7 @@
 .open vanmo.db
+.print ========================
+.print TESTING LOGINS TABLE
+.print ========================
 .print Logins table:
 select * from logins;
 .print
@@ -11,3 +14,20 @@ select * from logins;
 delete from logins where username = "Jim";
 .print Logins after deletion:
 select * from logins;
+.print
+.print
+.print ========================
+.print TESTING ACCOUNTS TABLE
+.print ========================
+.print Accounts table:
+select * from accounts;
+.print
+.print Execute insert: insert into accounts (username, accountname, type, balance) values ("Jim", "TestAccount", "Checking", 100.25);
+insert into accounts (username, accountname, type, balance) values ("Jim", "TestAccount", "Checking", 100.25);
+.print Accounts after insert:
+select * from accounts;
+.print
+.print Execute delete: delete from accounts where username = "Jim";
+delete from accounts where username = "Jim";
+.print Accounts after deletion:
+select * from accounts;
