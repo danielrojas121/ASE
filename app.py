@@ -10,7 +10,7 @@ from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, session
 from custom_json_encoder import CustomJSONEncoder, CustomJSONDecoder
 from user import User
-#from account import Account
+from account import Account
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -45,11 +45,9 @@ def user_login():
     login = cur.fetchone()
     if login is None:
         flash('Wrong username or password!')
-        #return redirect("/")
     else:
         session.clear()
         session['logged_in'] = True
-        #session['username'] = username
         session['userObject'] = User(login[0], username)
     return home()
 
@@ -82,19 +80,26 @@ def add_bank_account():
         user = get_user()
         username = user.get_username()
         if request.method == "POST":
-            temp = request.form['cents']
-            if len(temp) > 2:
+            account_name = request.form['account_name']
+            account_type = request.form['account_type']
+            cents = request.form['cents']
+            if len(cents) > 2:
                 flash('Please enter 2 digits for decimal places')
                 return redirect("/add_bank_account")
             else:
-                temp2 = float(temp)
-                balance = (float(request.form['dollars'])) + (temp2/100)
+                cents = float(cents)
+                balance = (float(request.form['dollars'])) + (cents/100)
+
+                account = Account(account_name, account_type, username)
+                account.deposit(balance)
+                user.add_account(account)
+
                 sql_db = get_db()
                 sql_db.execute('''insert into accounts (username, accountname, type, balance) values
                                (?, ?, ?, ?)''',
-                               [username, request.form['account_name'],
-                                request.form['account_type'], balance])
+                               [username, account_name, account_type, balance])
                 sql_db.commit()
+                session['userObject'] = user
                 return redirect("/")
         else:
             sql_db = get_db()
@@ -123,6 +128,7 @@ def view_current_account():
 def logout():
     """Logout user"""
     session['logged_in'] = False
+    session.clear()
     return redirect("/")
 
 def connect_db():
@@ -146,7 +152,7 @@ def initdb_command():
 
 def get_db():
     """Opens a new database connection if there is none yet for the
-    current APPlication context.
+    current application context.
     """
     if not hasattr(g, 'sqlite_db'):
         g.sqlite_db = connect_db()
@@ -162,7 +168,14 @@ def close_db(error):
 
 def json_to_user(dictionary):
     """Converts a json dictionary to a User class object"""
-    user_object = User(dictionary['id'], dictionary['username'], dictionary['accounts'])
+    user_object = User(dictionary['id'], dictionary['username'])
+
+    accounts_list = dictionary['accounts'] #list of account dictionaries
+    for account in accounts_list:
+        account_object = Account(account['account_name'], account['type'],
+                                 account['username'])
+        account_object.deposit(float(account['balance']))
+        user_object.add_account(account_object)
     return user_object
 
 def get_user():

@@ -10,15 +10,20 @@ class CustomJSONEncoder(JSONEncoder):
     def default(self, obj): # pylint: disable=E0202
         """Handle different object instances"""
         if isinstance(obj, User):
-            #implement code to convert User object to a dict
+            #convert User object to a json dict
             user_dict = {}
             user_dict['id'] = obj.get_user_id()
             user_dict['username'] = obj.get_username()
             user_dict['accounts'] = obj.get_accounts()
             return user_dict
         elif isinstance(obj, Account):
-            #Implement custom code for Account objects
-            JSONEncoder.default(self, obj)
+            #convert Account object to a json dict
+            account_dict = {}
+            account_dict['account_name'] = obj.get_account_name()
+            account_dict['username'] = obj.get_username()
+            account_dict['type'] = obj.get_account_type()
+            account_dict['balance'] = obj.get_balance()
+            return account_dict
         else:
             JSONEncoder.default(self, obj)
 

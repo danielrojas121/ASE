@@ -3,10 +3,10 @@
 
 class User(object):
     """User class to store and manipulate user data in a session"""
-    def __init__(self, user_id, username, accounts=None):
+    def __init__(self, user_id, username):
         self.__user_id = user_id
         self.__username = username
-        self.__accounts = accounts #list to keep track of this user's accounts
+        self.__accounts = [] #list to keep track of this user's accounts
 
     def get_user_id(self):
         """return user id"""

@@ -4,6 +4,7 @@ from fabric.api import local, shell_env
 
 def prepare_deploy():
     '''Run all tests, initialize server and db, and run app'''
+    clean()
     static_analyzer()
     init_database()
     run_tests()
@@ -11,6 +12,7 @@ def prepare_deploy():
 
 def quick_deploy():
     '''No static analysis or test; only use for repeated debugging'''
+    clean()
     init_database()
     run_server()
 
@@ -42,3 +44,7 @@ def run_server():
     else:
         with shell_env(FLASK_APP='app.py'):
             local('flask run')
+
+def clean():
+    '''Remove all pyc files from current directory'''
+    local("find . -name \*.pyc -delete")
