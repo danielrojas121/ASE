@@ -45,13 +45,13 @@ def user_login():
     login = cur.fetchone()
     if login is None:
         flash('Wrong username or password!')
-        return redirect("/")
+        #return redirect("/")
     else:
         session.clear()
         session['logged_in'] = True
         #session['username'] = username
         session['userObject'] = User(login[0], username)
-        return home()
+    return home()
 
 @APP.route("/signup", methods=["POST", "GET"])
 def signup():
