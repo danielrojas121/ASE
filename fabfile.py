@@ -5,8 +5,8 @@ from fabric.api import local, shell_env
 def prepare_deploy():
     '''Run all tests, initialize server and db, and run app'''
     static_analyzer()
-    run_tests()
     init_database()
+    run_tests()
     run_server()
 
 def quick_deploy():
@@ -17,6 +17,9 @@ def quick_deploy():
 def static_analyzer():
     '''Runs Pylint analyzer'''
     local("pylint app.py")
+    local("pylint custom_json_encoder.py")
+    local("pylint user.py")
+    local("pylint account.py")
 
 def run_tests():
     '''Perform tests here'''

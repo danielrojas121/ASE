@@ -8,8 +8,9 @@
 import os
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, session
+from custom_json_encoder import CustomJSONEncoder, CustomJSONDecoder
 from user import User
-from account import Account
+#from account import Account
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -22,6 +23,8 @@ APP.config.update(dict(
     PASSWORD='default'
 ))
 APP.config.from_envvar('FLASKR_SETTINGS', silent=True)
+APP.json_encoder = CustomJSONEncoder # Converts our objects to JSON dicts
+APP.json_decoder = CustomJSONDecoder
 
 @APP.route("/", methods=["POST", "GET"])
 def home():
@@ -43,8 +46,10 @@ def user_login():
     if login is None:
         flash('Wrong username or password!')
     else:
+        session.clear()
         session['logged_in'] = True
-        session['username'] = username
+        #session['username'] = username
+        session['userObject'] = User(login[0], username)
     return home()
 
 @APP.route("/signup", methods=["POST", "GET"])
@@ -52,12 +57,13 @@ def signup():
     """Signup page where people can add username and password."""
     if request.method == "POST":
         username = request.form['username']
+        password = request.form['password']
         sql_db = get_db()
         cur = sql_db.execute('select username from logins where username = ?', [username])
         user = cur.fetchone()
         if user is None:
             sql_db.execute('insert into logins (username, password) values (?, ?)',
-                           [request.form['username'], request.form['password']])
+                           [username, password])
             sql_db.commit()
             return redirect("/")
         else:
@@ -72,6 +78,8 @@ def add_bank_account():
     if not session.get('logged_in'):
         return redirect("/")
     else:
+        user = get_user()
+        username = user.get_username()
         if request.method == "POST":
             temp = request.form['cents']
             if len(temp) > 2:
@@ -83,14 +91,14 @@ def add_bank_account():
                 sql_db = get_db()
                 sql_db.execute('''insert into accounts (username, accountname, type, balance) values
                                (?, ?, ?, ?)''',
-                               [session.get('username'), request.form['account_name'],
+                               [username, request.form['account_name'],
                                 request.form['account_type'], balance])
                 sql_db.commit()
                 return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
-                                 [session.get('username')])
+                                 [username])
             accounts = cur.fetchall()
             return render_template("add_bank_account.html", accounts=accounts)
 
@@ -101,8 +109,10 @@ def view_current_account():
         return redirect("/")
     else:
         sql_db = get_db()
-        cur = sql_db.execute('select * from accounts where username = ?', [session.get('username')])
-        cur2 = sql_db.execute('select * from logins where username = ?', [session.get('username')])
+        user = get_user()
+        username = user.get_username()
+        cur = sql_db.execute('select * from accounts where username = ?', [username])
+        cur2 = sql_db.execute('select * from logins where username = ?', [username])
         accounts = cur.fetchall()
         logins = cur2.fetchall()
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
@@ -110,7 +120,7 @@ def view_current_account():
 
 @APP.route("/logout")
 def logout():
-    '''Logout user'''
+    """Logout user"""
     session['logged_in'] = False
     return redirect("/")
 
@@ -148,6 +158,15 @@ def close_db(error):
         g.sqlite_db.close()
     else:
         print error
+
+def json_to_user(dictionary):
+    """Converts a json dictionary to a User class object"""
+    user_object = User(dictionary['id'], dictionary['username'], dictionary['accounts'])
+    return user_object
+
+def get_user():
+    """Retrieves current session User object"""
+    return json_to_user(session['userObject'])
 
 if __name__ == "__main__":
     APP.run(host="0.0.0.0", threaded=True)
