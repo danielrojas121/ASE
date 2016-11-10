@@ -30,7 +30,6 @@ APP.json_decoder = CustomJSONDecoder
 def home():
     """Home function to render view accounts or login page."""
     if not session.get('logged_in'):
-        session.clear()
         return render_template('index.html')
     else:
         return redirect("/view_current_account")
