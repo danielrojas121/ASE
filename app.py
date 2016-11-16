@@ -29,6 +29,7 @@ APP.json_decoder = CustomJSONDecoder
 @APP.route("/", methods=["POST", "GET"])
 def home():
     """Home function to render view accounts or login page."""
+    """session.clear()"""
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -85,7 +86,7 @@ def add_bank_account():
             temp = request.form['cents']
             if len(temp) > 2:
                 flash('Please enter 2 digits for decimal places')
-                return redirect("/add_bank_account")
+                """return redirect("/add_bank_account")"""
             else:
                 temp2 = float(temp)
                 balance = (float(request.form['dollars'])) + (temp2/100)
