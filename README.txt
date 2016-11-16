@@ -20,6 +20,7 @@ For static analysis we are using Pylint. Pylint checks for errors and code smell
 
 Test Cases:
 We have an automated test that check database integrity. Run this with 'fab run_tests'
+We have also implemented testing using Pytest testing suite.
 
 
 Using the system

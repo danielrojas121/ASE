@@ -55,7 +55,6 @@ def test_signup_empty_pass(client):
 def test_duplicate_signup(client):
 	assert client.post('/signup', data=dict(username = 'testinglogin', password = 'test')).status_code == 302
 	assert client.post('/signup', data=dict(username = 'testinglogin', password = 'test')).status_code == 302
-	#assert client.post('/login', data=dict(usr = 'testinglogin', pwd = 'test')).status_code == 302
 	assert client.get('/view_current_account').status_code == 302
 
 '''Account tests'''
