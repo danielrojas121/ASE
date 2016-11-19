@@ -7,6 +7,7 @@ class User(object):
         self.__user_id = user_id
         self.__username = username
         self.__accounts = [] #list to keep track of this user's accounts
+        self.__transactions = [] #list to keep track of this user's transactions
 
     def get_user_id(self):
         """return user id"""
@@ -20,11 +21,21 @@ class User(object):
         """return list of accounts"""
         return self.__accounts
 
+    def get_transactions(self):
+        """return list of transactions"""
+        return self.__transactions
+
     def add_account(self, account_object):
         """add a new account to list of accounts"""
         self.__accounts.append(account_object)
 
+    def add_transaction(self, transaction_object):
+        """add a new transaction object to list of transactions"""
+        self.__transactions.append(transaction_object)
+
     def __repr__(self):
         """pretty print user object"""
-        return "[id:%s username:%s accounts:%s]" % (self.__user_id, self.__username,
-                                                    self.__accounts)
+        return "[id:%s username:%s accounts:%s transactions:%s]" % (self.__user_id,
+                                                                    self.__username,
+                                                                    self.__accounts,
+                                                                    self.__transactions)

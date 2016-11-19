@@ -4,6 +4,7 @@ import json
 from flask.json import JSONEncoder, JSONDecoder
 from user import User
 from account import Account
+from transaction import Transaction
 
 class CustomJSONEncoder(JSONEncoder):
     """Custom JSON encoder to serialize User and Account objects"""
@@ -15,6 +16,7 @@ class CustomJSONEncoder(JSONEncoder):
             user_dict['id'] = obj.get_user_id()
             user_dict['username'] = obj.get_username()
             user_dict['accounts'] = obj.get_accounts()
+            user_dict['transactions'] = obj.get_transactions()
             return user_dict
         elif isinstance(obj, Account):
             #convert Account object to a json dict
@@ -24,6 +26,15 @@ class CustomJSONEncoder(JSONEncoder):
             account_dict['type'] = obj.get_account_type()
             account_dict['balance'] = obj.get_balance()
             return account_dict
+        elif isinstance(obj, Transaction):
+            #convert Transaction object to a json dict
+            transaction_dict = {}
+            transaction_dict['time_stamp'] = obj.get_time_stamp()
+            transaction_dict['account_1'] = obj.get_account_1()
+            transaction_dict['account_2'] = obj.get_account_2()
+            transaction_dict['amount'] = obj.get_amount()
+            transaction_dict['type'] = obj.get_transaction_type()
+            return transaction_dict
         else:
             JSONEncoder.default(self, obj)
 

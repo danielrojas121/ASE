@@ -11,6 +11,7 @@ from flask import Flask, flash, render_template, request, g, redirect, session
 from custom_json_encoder import CustomJSONEncoder, CustomJSONDecoder
 from user import User
 from account import Account
+from transaction import Transaction
 
 APP = Flask(__name__)
 APP.config.from_object(__name__)
@@ -48,7 +49,8 @@ def user_login():
     else:
         session.clear()
         session['logged_in'] = True
-        session['userObject'] = User(login[0], username)
+        user = User(login[0], username)
+        session['userObject'] = user
     return home()
 
 @APP.route("/signup", methods=["POST", "GET"])
@@ -176,6 +178,15 @@ def json_to_user(dictionary):
                                  account['username'])
         account_object.deposit(float(account['balance']))
         user_object.add_account(account_object)
+
+    transactions_list = dictionary['transactions']
+    for transaction in transactions_list:
+        transaction_object = Transaction(transaction['time_stamp'],
+                                         transaction['account_1'],
+                                         transaction['account_2'],
+                                         transaction['amount'], transaction['type'])
+        user_object.add_transaction(transaction_object)
+
     return user_object
 
 def get_user():
