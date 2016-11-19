@@ -120,8 +120,35 @@ def transfer():
             account_name1 = request.form['account_name1']
             account_name2 = request.form['account_name2']
             cents = request.form['cents']
+            cents = float(cents)
+            balance = (float(request.form['dollars'])) + (cents/100)
+            transactiontype = "Transfer"
+            sql_db = get_db()
+            value1 = sql_db.execute('''select balance from accounts where username = ?
+                                  and accountname = ?''', [username, account_name1])
+            value1 = value1.fetchone()[0]
+            value2 = sql_db.execute('''select balance from accounts where username = ?
+                                  and accountname = ?''', [username, account_name2])
+            value2 = value2.fetchone()[0]
+            new_value1 = float(value1) - balance
+            new_value2 = float(value2) + balance
+            sql_db.execute('''insert into transactions (username_1, account_1, username_2,
+                           account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
+                           [username, account_name1, username, account_name2, balance,
+                            transactiontype])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [new_value1, username, account_name1])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [new_value2, username, account_name2])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
         else:
-            return render_template("transfer.html")
+            sql_db = get_db()
+            cur = sql_db.execute('select * from accounts where username = ?',
+                                 [username])
+            accounts = cur.fetchall()
+            return render_template("transfer.html", accounts=accounts)
 
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
