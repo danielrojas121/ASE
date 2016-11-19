@@ -37,80 +37,37 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="/view_current_account">Home</a></li>
+            <li><a href="/view_current_account">Home</a></li>
             <li><a href="/add_bank_account">Add Account</a></li>
-            <li><a href="/view_transactions">View Transactions</a></li>
+            <li class="active"><a href="/view_transactions">View Transactions</a></li>
             <li><a href="/logout" style="float:right">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div><!--/.container-fluid -->
     </nav>
 
-    <!-- Main component for a primary marketing message or call to action -->
-
-    <div id="greetings"> 
-      <class="logins">
-          {% for entry in logins %}
-            <h3>Welcome Back {{ entry.username }}!</h3> 
-          {% endfor %}
-    </div>
-
-    <div id="accounts-table"> 
-      <h3>Current Bank Accounts</h3>
-      <class="accounts">
+    <div id="transactions-table"> 
+      <h3>Recent Transactions</h3>
+      <class="transactions">
       <table class="table table-stripe d"> 
         <thead> 
-          <tr> <th>ID</th> <th>Username</th> <th>Name</th> <th>Type</th> <th>Balance</th> </tr> 
+          <tr> <th>Timestamp</th> <th>User 1</th> <th>Account 1</th> <th>User 2</th> <th>Account 2</th> <th>Amount</th> <th>Type</th> </tr> 
         </thead> 
         <tbody> 
-          {% for entry in accounts %}
+          {% for entry in transactions %}
           <tr>
-            <td>{{ entry.id }}</td>
-            <td>{{ entry.username }}</td>
-            <td>{{ entry.accountname }}</td> 
+            <td>{{ entry.timestamp }}</td>
+            <td>{{ entry.username_1 }}</td>
+            <td>{{ entry.account_1 }}</td> 
+            <td>{{ entry.username_2 }}</td> 
+            <td>{{ entry.account_2 }}</td>
+            <td>{{ entry.amount }}</td> 
             <td>{{ entry.type }}</td> 
-            <td> $ {{ entry.balance }}</td> 
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
 
-    <!--try adding has-success, has-warning, and has-danger to the class-->
-    <div>
-      <form action="/transfer" method="GET">
-        <button type="submit" class="btn btn-default btn-primary" href="/transfer">Make a Transfer</button>
-      </form>
-    </div>
-
-    <div>
-      <form action="/add_bank_account" method="GET">
-        <button type="submit" class="btn btn-default btn-primary" href="/add_bank_account">Add Account</button>
-      </form>
-    </div>
-
-    <div>
-      <form action="/add_bank_account" method="GET">
-        <button type="submit" class="btn btn-default btn-primary" href="/withdraw">Withdraw</button>
-      </form>
-    </div>
-
-     <div class="container">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                  {{ message }}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        </div>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="static/js/add_bank_account.js"></script>
   </body>
 </html>
