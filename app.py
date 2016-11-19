@@ -108,6 +108,21 @@ def add_bank_account():
             accounts = cur.fetchall()
             return render_template("add_bank_account.html", accounts=accounts)
 
+@APP.route("/transfer", methods=["POST", "GET"])
+def transfer():
+    """Page to redirect to when user chooses to make a transfer"""
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        user = get_user()
+        username = user.get_username()
+        if request.method == "POST":
+            account_name1 = request.form['account_name1']
+            account_name2 = request.form['account_name2']
+            cents = request.form['cents']
+        else:
+            return render_template("transfer.html")
+
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
