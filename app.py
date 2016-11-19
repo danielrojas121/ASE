@@ -138,6 +138,26 @@ def view_current_account():
         logins = cur2.fetchall()
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
+@APP.route("/view_transactions", methods=["GET"])
+def view_transactions():
+    """View transactions for a user"""
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        sql_db = get_db()
+        '''
+        Not sure if need following. Just copied from another functions. Delete if unnecessary
+        user = get_user()
+        username = user.get_username()
+        cur = sql_db.execute('select * from accounts where username = ?', [username])
+        cur2 = sql_db.execute('select * from logins where username = ?', [username])
+        accounts = cur.fetchall()
+        logins = cur2.fetchall()
+        '''
+        cur = sql_db.execute('select * from transactions')
+        transactions = cur.fetchall()
+        return render_template("view_transactions.html", transactions=transactions)
+
 
 @APP.route("/logout")
 def logout():
