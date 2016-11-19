@@ -110,6 +110,21 @@ def add_bank_account():
             accounts = cur.fetchall()
             return render_template("add_bank_account.html", accounts=accounts)
 
+@APP.route("/transfer", methods=["POST", "GET"])
+def transfer():
+    """Page to redirect to when user chooses to make a transfer"""
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        user = get_user()
+        username = user.get_username()
+        if request.method == "POST":
+            account_name1 = request.form['account_name1']
+            account_name2 = request.form['account_name2']
+            cents = request.form['cents']
+        else:
+            return render_template("transfer.html")
+
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
@@ -124,6 +139,26 @@ def view_current_account():
         accounts = cur.fetchall()
         logins = cur2.fetchall()
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
+
+@APP.route("/view_transactions", methods=["GET"])
+def view_transactions():
+    """View transactions for a user"""
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        sql_db = get_db()
+        '''
+        Not sure if need following. Just copied from another functions. Delete if unnecessary
+        user = get_user()
+        username = user.get_username()
+        cur = sql_db.execute('select * from accounts where username = ?', [username])
+        cur2 = sql_db.execute('select * from logins where username = ?', [username])
+        accounts = cur.fetchall()
+        logins = cur2.fetchall()
+        '''
+        cur = sql_db.execute('select * from transactions')
+        transactions = cur.fetchall()
+        return render_template("view_transactions.html", transactions=transactions)
 
 
 @APP.route("/logout")
