@@ -216,7 +216,9 @@ def view_transactions():
         return redirect("/")
     else:
         sql_db = get_db()
-        cur = sql_db.execute('select * from transactions')
+        user = get_user()
+        username = user.get_username()
+        cur = sql_db.execute('select * from transactions where username_1 = ? or username_2 = ?', [username, username])
         transactions = cur.fetchall()
         return render_template("view_transactions.html", transactions=transactions)
 
