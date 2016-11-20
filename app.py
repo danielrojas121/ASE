@@ -30,7 +30,6 @@ APP.json_decoder = CustomJSONDecoder
 @APP.route("/", methods=["POST", "GET"])
 def home():
     """Home function to render view accounts or login page."""
-    """session.clear()"""
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -86,24 +85,23 @@ def add_bank_account():
             account_name = request.form['account_name']
             account_type = request.form['account_type']
             cents = request.form['cents']
-            if len(cents) > 2:
-                flash('Please enter 2 digits for decimal places')
-                """return redirect("/add_bank_account")"""
-            else:
-                cents = float(cents)
-                balance = (float(request.form['dollars'])) + (cents/100)
+            #if len(cents) > 2:
+            #    flash('Please enter 2 digits for decimal places')
+            #    """return redirect("/add_bank_account")"""
+            cents = float(cents)
+            balance = (float(request.form['dollars'])) + (cents/100)
 
-                account = Account(account_name, account_type, username)
-                account.deposit(balance)
-                user.add_account(account)
+            account = Account(account_name, account_type, username)
+            account.deposit(balance)
+            user.add_account(account)
 
-                sql_db = get_db()
-                sql_db.execute('''insert into accounts (username, accountname, type, balance) values
-                               (?, ?, ?, ?)''',
-                               [username, account_name, account_type, balance])
-                sql_db.commit()
-                session['userObject'] = user
-                return redirect("/")
+            sql_db = get_db()
+            sql_db.execute('''insert into accounts (username, accountname, type, balance) values
+                           (?, ?, ?, ?)''',
+                           [username, account_name, account_type, balance])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
@@ -153,6 +151,49 @@ def transfer():
             accounts = cur.fetchall()
             return render_template("transfer.html", accounts=accounts)
 
+@APP.route("/sendmoney", methods=["POST", "GET"])
+def sendmoney():
+    """Page to redirect to when user chooses to send money to another username"""
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        user = get_user()
+        username = user.get_username()
+        if request.method == "POST":
+            account_name1 = request.form['account_name1']
+            username2 = request.form['username2']
+            account_name2 = request.form['account_name2']
+            cents = request.form['cents']
+            cents = float(cents)
+            balance = (float(request.form['dollars'])) + (cents/100)
+            transactiontype = "Payment"
+            sql_db = get_db()
+            value1 = sql_db.execute('''select balance from accounts where username = ?
+                                  and accountname = ?''', [username, account_name1])
+            value1 = value1.fetchone()[0]
+            value2 = sql_db.execute('''select balance from accounts where username = ?
+                                  and accountname = ?''', [username2, account_name2])
+            value2 = value2.fetchone()[0]
+            new_value1 = float(value1) - balance
+            new_value2 = float(value2) + balance
+            sql_db.execute('''insert into transactions (username_1, account_1, username_2,
+                           account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
+                           [username, account_name1, username2, account_name2, balance,
+                            transactiontype])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [new_value1, username, account_name1])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [new_value2, username2, account_name2])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
+        else:
+            sql_db = get_db()
+            cur = sql_db.execute('select * from accounts where username = ?',
+                                 [username])
+            accounts = cur.fetchall()
+            return render_template("sendmoney.html", accounts=accounts)
+
 @APP.route("/view_current_account", methods=["GET"])
 def view_current_account():
     """Page to redirect to when user chooses to create new bank accounts"""
@@ -175,16 +216,9 @@ def view_transactions():
         return redirect("/")
     else:
         sql_db = get_db()
-        '''
-        Not sure if need following. Just copied from another functions. Delete if unnecessary
         user = get_user()
         username = user.get_username()
-        cur = sql_db.execute('select * from accounts where username = ?', [username])
-        cur2 = sql_db.execute('select * from logins where username = ?', [username])
-        accounts = cur.fetchall()
-        logins = cur2.fetchall()
-        '''
-        cur = sql_db.execute('select * from transactions')
+        cur = sql_db.execute('select * from transactions where username_1 = ? or username_2 = ?', [username, username])
         transactions = cur.fetchall()
         return render_template("view_transactions.html", transactions=transactions)
 

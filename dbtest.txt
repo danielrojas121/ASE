@@ -31,3 +31,20 @@ select * from accounts;
 delete from accounts where username = "Jim";
 .print Accounts after deletion:
 select * from accounts;
+.print
+.print
+.print ========================
+.print TESTING TRANSACTIONS TABLE
+.print ========================
+.print Transactions table:
+select * from transactions;
+.print
+.print Execute insert: insert into transactions (username_1, account_1, username_2, account_2, amount, type) values ("Jim", "Checking Account", "Joe", "Savings Account", 100.25, "Payment");
+insert into transactions (username_1, account_1, username_2, account_2, amount, type) values ("Jim", "Checking Account", "Joe", "Savings Account", 100.25, "Payment");
+.print Transactions after insert:
+select * from transactions;
+.print
+.print Execute delete: delete from transactions where type = "Payment";
+delete from transactions where type = "Payment";
+.print Transactions after deletion:
+select * from transactions;
