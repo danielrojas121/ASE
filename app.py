@@ -30,7 +30,6 @@ APP.json_decoder = CustomJSONDecoder
 @APP.route("/", methods=["POST", "GET"])
 def home():
     """Home function to render view accounts or login page."""
-    """session.clear()"""
     if not session.get('logged_in'):
         return render_template('index.html')
     else:
@@ -86,24 +85,23 @@ def add_bank_account():
             account_name = request.form['account_name']
             account_type = request.form['account_type']
             cents = request.form['cents']
-            if len(cents) > 2:
-                flash('Please enter 2 digits for decimal places')
-                """return redirect("/add_bank_account")"""
-            else:
-                cents = float(cents)
-                balance = (float(request.form['dollars'])) + (cents/100)
+            #if len(cents) > 2:
+            #    flash('Please enter 2 digits for decimal places')
+            #    """return redirect("/add_bank_account")"""
+            cents = float(cents)
+            balance = (float(request.form['dollars'])) + (cents/100)
 
-                account = Account(account_name, account_type, username)
-                account.deposit(balance)
-                user.add_account(account)
+            account = Account(account_name, account_type, username)
+            account.deposit(balance)
+            user.add_account(account)
 
-                sql_db = get_db()
-                sql_db.execute('''insert into accounts (username, accountname, type, balance) values
-                               (?, ?, ?, ?)''',
-                               [username, account_name, account_type, balance])
-                sql_db.commit()
-                session['userObject'] = user
-                return redirect("/")
+            sql_db = get_db()
+            sql_db.execute('''insert into accounts (username, accountname, type, balance) values
+                           (?, ?, ?, ?)''',
+                           [username, account_name, account_type, balance])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
