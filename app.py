@@ -188,6 +188,43 @@ def view_transactions():
         transactions = cur.fetchall()
         return render_template("view_transactions.html", transactions=transactions)
 
+@APP.route("/withdraw", methods=["POST", "GET"])
+def withdraw():
+    '''User takes out money from one of his/her accounts'''
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        user = get_user()
+        username = user.get_username()
+        if request.method == "POST":
+            account_name1 = request.form['account_name']
+            cents = request.form['cents']
+            cents = float(cents)
+            balance = (float(request.form['dollars'])) + (cents/100)
+            transactiontype = "Withdraw"
+            sql_db = get_db()
+            value1 = sql_db.execute('''select balance from accounts where username = ?
+                    and accountname = ?''', [username, account_name1])
+            value1 = value1.fetchone()[0]
+            new_value1 = float(value1) - balance
+            sql_db.execute('''insert into transactions (username_1, account_1, username_2,
+                account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
+                        [username, account_name1, username, account_name1, balance,
+                        transactiontype])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                    [new_value1, username, account_name1])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
+        else:
+            sql_db = get_db()
+            cur = sql_db.execute('select * from accounts where username = ?',
+                    [username])
+            accounts = cur.fetchall()
+            return render_template("withdraw.html", accounts=accounts)
+
+
+
 
 @APP.route("/logout")
 def logout():
