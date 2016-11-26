@@ -218,7 +218,8 @@ def view_transactions():
         sql_db = get_db()
         user = get_user()
         username = user.get_username()
-        cur = sql_db.execute('select * from transactions where username_1 = ? or username_2 = ?', [username, username])
+        cur = sql_db.execute('''select * from transactions where username_1 = ?
+                                or username_2 = ?''', [username, username])
         transactions = cur.fetchall()
         return render_template("view_transactions.html", transactions=transactions)
 
@@ -243,17 +244,17 @@ def withdraw():
             new_value1 = float(value1) - balance
             sql_db.execute('''insert into transactions (username_1, account_1, username_2,
                 account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
-                        [username, account_name1, username, account_name1, balance,
-                        transactiontype])
+                           [username, account_name1, username, account_name1, balance,
+                            transactiontype])
             sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                    [new_value1, username, account_name1])
+                           [new_value1, username, account_name1])
             sql_db.commit()
             session['userObject'] = user
             return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
-                    [username])
+                                 [username])
             accounts = cur.fetchall()
             return render_template("withdraw.html", accounts=accounts)
 
