@@ -7,7 +7,7 @@ class Transaction(object):
         self.__time_stamp = time_stamp
         self.__account_1 = account_1
         self.__account_2 = account_2
-        self.__amount = amount
+        self.__amount = float(amount)
         self.__transaction_type = t_type
 
     def get_time_stamp(self):

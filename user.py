@@ -29,9 +29,28 @@ class User(object):
         """add a new account to list of accounts"""
         self.__accounts.append(account_object)
 
-    def add_transaction(self, transaction_object):
+    def add_transaction(self, t_object):
         """add a new transaction object to list of transactions"""
-        self.__transactions.append(transaction_object)
+        self.__transactions.append(t_object)
+
+        amount = float(t_object.get_amount())
+        t_type = t_object.get_transaction_type()
+
+        self.update_account_balance(t_object.get_account_1(), amount, t_type)
+
+    def update_account_balance(self, account_name, transaction_amount, transaction_type):
+        """update a specified account's balance after a transactions"""
+        i = 0
+        found = False
+        while not found and i < len(self.__accounts):
+            account = self.__accounts[i]
+            if account.get_account_name() == account_name:
+                found = True
+                if transaction_type == "Withdraw":
+                    account.withdraw(transaction_amount)
+                else:
+                    account.deposit(transaction_amount)
+            i += 1
 
     def __repr__(self):
         """pretty print user object"""
