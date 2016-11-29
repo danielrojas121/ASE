@@ -132,17 +132,23 @@ def transfer():
             value2 = sql_db.execute('''select balance from accounts where username = ?
                                   and accountname = ?''', [username, account_name2])
             value2 = value2.fetchone()[0]
-            new_value1 = float(value1) - balance
-            new_value2 = float(value2) + balance
+            value1 = float(value1) - balance
+            value2 = float(value2) + balance
             sql_db.execute('''insert into transactions (username_1, account_1, username_2,
                            account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                            [username, account_name1, username, account_name2, balance,
                             transactiontype])
             sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [new_value1, username, account_name1])
+                           [value1, username, account_name1])
             sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [new_value2, username, account_name2])
+                           [value2, username, account_name2])
+            cur1 = sql_db.execute('''select timestamp from transactions order by timestamp
+                desc limit 1''')
+            timestamp = cur1.fetchone()[0]
             sql_db.commit()
+            transaction = Transaction(timestamp, account_name1, account_name2,
+                                      balance, transactiontype)
+            user.add_transaction(transaction)
             session['userObject'] = user
             return redirect("/")
         else:
@@ -158,8 +164,7 @@ def sendmoney():
     if not session.get('logged_in'):
         return redirect("/")
     else:
-        user = get_user()
-        username = user.get_username()
+        username = get_user().get_username()
         if request.method == "POST":
             account_name1 = request.form['account_name1']
             username2 = request.form['username2']
@@ -175,18 +180,24 @@ def sendmoney():
             value2 = sql_db.execute('''select balance from accounts where username = ?
                                   and accountname = ?''', [username2, account_name2])
             value2 = value2.fetchone()[0]
-            new_value1 = float(value1) - balance
-            new_value2 = float(value2) + balance
+            value1 = float(value1) - balance
+            value2 = float(value2) + balance
             sql_db.execute('''insert into transactions (username_1, account_1, username_2,
                            account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                            [username, account_name1, username2, account_name2, balance,
                             transactiontype])
             sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [new_value1, username, account_name1])
+                           [value1, username, account_name1])
             sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [new_value2, username2, account_name2])
+                           [value2, username2, account_name2])
+            cur1 = sql_db.execute('''select timestamp from transactions order by timestamp
+                desc limit 1''')
+            timestamp = cur1.fetchone()[0]
             sql_db.commit()
-            session['userObject'] = user
+            transaction = Transaction(timestamp, account_name1, account_name2,
+                                      balance, transactiontype)
+            get_user().add_transaction(transaction)
+            session['userObject'] = get_user()
             return redirect("/")
         else:
             sql_db = get_db()
@@ -269,6 +280,55 @@ def deposit():
                                  [username])
             accounts = cur.fetchall()
             return render_template("deposit.html", accounts=accounts)
+
+@APP.route("/purchase", methods=["POST", "GET"])
+def purchase():
+    '''User adds money into one of their accounts'''
+    if not session.get('logged_in'):
+        return redirect("/")
+    else:
+        user = get_user()
+        username = user.get_username()
+        if request.method == "POST":
+            account_name = request.form['account_name']
+            store_name = request.form['store_name']
+            item_name = request.form['item_name']
+            cents = float(request.form['cents'])
+            purchase_amount = float(request.form['dollars']) + (cents/100.00)
+            transaction_type = "Purchase"
+
+            sql_db = get_db()
+            balance = sql_db.execute('''select balance from accounts where username = ?
+                    and accountname = ?''', [username, account_name])
+            balance = float(balance.fetchone()[0])
+            balance -= purchase_amount
+
+            sql_db.execute('''insert into transactions (username_1, account_1, username_2,
+                account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
+                           [username, account_name, store_name, item_name, purchase_amount,
+                            transaction_type])
+            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [balance, username, account_name])
+
+            cur = sql_db.execute('''select timestamp from transactions order by timestamp
+                desc limit 1''')
+            timestamp = cur.fetchone()[0]
+
+            sql_db.commit()
+
+            transaction = Transaction(timestamp, account_name, item_name,
+                                      purchase_amount, transaction_type)
+            user.add_transaction(transaction)
+            session['userObject'] = user
+
+            return redirect("/")
+        else:
+            sql_db = get_db()
+            cur = sql_db.execute('select * from accounts where username = ?',
+                                 [username])
+            accounts = cur.fetchall()
+            return render_template("make_purchase.html", accounts=accounts)
+
 
 @APP.route("/withdraw", methods=["POST", "GET"])
 def withdraw():
