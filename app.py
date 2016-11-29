@@ -49,7 +49,8 @@ def user_login():
     else:
         session.clear()
         session['logged_in'] = True
-        user = User(login[0], username)
+        user = User(login['username'], username)
+        user = load_user_data(user)
         session['userObject'] = user
     return home()
 
@@ -439,6 +440,33 @@ def json_to_user(dictionary):
 def get_user():
     """Retrieves current session User object"""
     return json_to_user(session['userObject'])
+
+def load_user_data(user_object):
+    """Populates user object with data stored in db"""
+    sql_db = get_db()
+    username = user_object.get_username()
+
+    cur = sql_db.execute('select * from accounts where username = ?', [username])
+    accounts = cur.fetchall()
+
+    for account in accounts:
+        account_object = Account(account['accountname'], account['type'],
+                                 account['username'])
+        account_object.deposit(float(account['balance']))
+        user_object.add_account(account_object)
+
+    cur = sql_db.execute('''select * from transactions where username_1 = ? or
+                            username_2 = ?''', [username, username])
+    transactions = cur.fetchall()
+
+    for transaction in transactions:
+        transaction_object = Transaction(transaction['timestamp'],
+                                         transaction['account_1'],
+                                         transaction['account_2'],
+                                         transaction['amount'], transaction['type'])
+        user_object.add_transaction(transaction_object, update_accounts=False)
+
+    return user_object
 
 if __name__ == "__main__":
     APP.run(host="0.0.0.0", threaded=True)
