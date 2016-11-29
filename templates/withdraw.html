@@ -82,6 +82,26 @@
 
     	</form>
     </div>
+
+    <div id="accounts-table"> 
+      <h3>Current Bank Accounts</h3>
+      <class="accounts">
+      <table class="table table-stripe d"> 
+        <thead> 
+          <tr> <th>Name</th> <th>Type</th> <th>Balance</th> </tr> 
+        </thead> 
+        <tbody> 
+          {% for entry in accounts %}
+          <tr>
+            <td>{{ entry.accountname }}</td> 
+            <td>{{ entry.type }}</td> 
+            <td> $ {{ entry.balance }}</td> 
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
     <br>
 
   
