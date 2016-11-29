@@ -33,10 +33,16 @@ class User(object):
         """add a new transaction object to list of transactions"""
         self.__transactions.append(t_object)
 
+        account_from = t_object.get_account_1()
+        account_to = t_object.get_account_1()
         amount = float(t_object.get_amount())
         t_type = t_object.get_transaction_type()
 
-        self.update_account_balance(t_object.get_account_1(), amount, t_type)
+        if t_type == "Transfer" or t_type == "Payment" or t_type == "Purchase":
+            self.update_account_balance(account_from, amount, "Withdraw")
+            self.update_account_balance(account_to, amount, "Deposit")
+        else:
+            self.update_account_balance(account_from, amount, t_type)
 
     def update_account_balance(self, account_name, transaction_amount, transaction_type):
         """update a specified account's balance after a transactions"""
@@ -48,7 +54,7 @@ class User(object):
                 found = True
                 if transaction_type == "Withdraw":
                     account.withdraw(transaction_amount)
-                else:
+                elif transaction_type == "Deposit":
                     account.deposit(transaction_amount)
             i += 1
 
