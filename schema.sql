@@ -8,6 +8,7 @@ create table logins (
 drop table if exists accounts;
 create table accounts (
 	id integer primary key autoincrement,
+	timestamp datetime default current_timestamp,
 	username text not null,
 	accountname text not null,
 	type text not null,
