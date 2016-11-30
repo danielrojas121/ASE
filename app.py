@@ -6,6 +6,7 @@
     Duru Kahyaoglu
 """
 import os
+import time
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, session
 from custom_json_encoder import CustomJSONEncoder, CustomJSONDecoder
@@ -219,6 +220,34 @@ def view_current_account():
         cur2 = sql_db.execute('select * from logins where username = ?', [username])
         accounts = cur.fetchall()
         logins = cur2.fetchall()
+        cur3 = sql_db.execute('select * from accounts where type like "SAV%" ')
+        new_accounts = cur3.fetchall()
+        t = time.strftime("%H:%M:%S")
+        time_1 = t.split(":")
+        minute2 = time_1[1]
+        seconds2 = time_1[2]
+        update_balance = 0
+        for item in new_accounts:
+            time1 = item[1]
+            time2 = time1.split()[1]
+            time_arr = time2.split(":")
+            minute1 = time_arr[1]
+            seconds1 = time_arr[2]
+            min1 = int(minute1)
+            min2 = int(minute2)
+            sec1 = int(seconds1)
+            sec2 = int(seconds2)
+            total1 = (min1 * 60) + (sec1)
+            total2 = (min2 * 60) + (sec2)
+            diff = abs(total2-total1)
+            if((diff%10 == 0) and (diff != 0)):
+                print "interest time!"
+                old = item[5]
+                diff2 = abs(min2 - min1)
+                update_balance = old*(1 + 0.1*diff2)
+                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                           [update_balance, item[2], item[3]])
+                sql_db.commit()
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 @APP.route("/view_transactions", methods=["GET"])
@@ -280,6 +309,8 @@ def deposit():
                                  [username])
             accounts = cur.fetchall()
             return render_template("deposit.html", accounts=accounts)
+
+
 
 @APP.route("/purchase", methods=["POST", "GET"])
 def purchase():
@@ -358,7 +389,7 @@ def withdraw():
             cur = sql_db.execute('''select timestamp from transactions order by timestamp
                 desc limit 1''')
             timestamp = cur.fetchone()[0]
-
+            
             sql_db.commit()
 
             transaction = Transaction(timestamp, account_name1, account_name1,
