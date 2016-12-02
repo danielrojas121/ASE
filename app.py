@@ -240,14 +240,18 @@ def view_current_account():
             total1 = (min1 * 60) + (sec1)
             total2 = (min2 * 60) + (sec2)
             diff = abs(total2-total1)
-            if((diff%10 == 0) and (diff != 0)):
+            diff2 = abs(min2 - min1)
+            session['flag'] = False
+            if((diff%60 == 0) and (diff != 0) and (session.get('flag') == False)):
                 print "interest time!"
                 old = item[5]
-                diff2 = abs(min2 - min1)
                 update_balance = old*(1 + 0.1*diff2)
                 sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
                            [update_balance, item[2], item[3]])
                 sql_db.commit()
+                session['flag'] = True
+            elif((diff%60 != 0) or (session.get('flag') == True)):
+                session['flag'] = False
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 @APP.route("/view_transactions", methods=["GET"])
