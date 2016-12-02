@@ -389,7 +389,7 @@ def withdraw():
             cur = sql_db.execute('''select timestamp from transactions order by timestamp
                 desc limit 1''')
             timestamp = cur.fetchone()[0]
-            
+
             sql_db.commit()
 
             transaction = Transaction(timestamp, account_name1, account_name1,
@@ -411,6 +411,12 @@ def logout():
     session['logged_in'] = False
     session.clear()
     return redirect("/")
+
+@APP.after_request
+def add_header(response):
+    '''Does not allow back button after logged out'''
+    response.headers['Cache-Control'] = 'no-cache, no-store, , must-revalidate, post-check=0, pre-check=0'
+    return response
 
 def connect_db():
     """Connects to the specific database."""
