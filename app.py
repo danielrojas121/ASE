@@ -222,8 +222,8 @@ def view_current_account():
         logins = cur2.fetchall()
         cur3 = sql_db.execute('select * from accounts where type like "SAV%" ')
         new_accounts = cur3.fetchall()
-        t = time.strftime("%H:%M:%S")
-        time_1 = t.split(":")
+        t_real = time.strftime("%H:%M:%S")
+        time_1 = t_real.split(":")
         minute2 = time_1[1]
         seconds2 = time_1[2]
         update_balance = 0
@@ -242,15 +242,15 @@ def view_current_account():
             diff = abs(total2-total1)
             diff2 = abs(min2 - min1)
             session['flag'] = False
-            if((diff%60 == 0) and (diff != 0) and (session.get('flag') == False)):
+            if(diff%60 == 0) and (diff != 0) and (session.get('flag') == False):
                 print "interest time!"
                 old = item[5]
                 update_balance = old*(1 + 0.1*diff2)
                 sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [update_balance, item[2], item[3]])
+                               [update_balance, item[2], item[3]])
                 sql_db.commit()
                 session['flag'] = True
-            elif((diff%60 != 0) or (session.get('flag') == True)):
+            elif(diff%60 != 0) or (session.get('flag')):
                 session['flag'] = False
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
