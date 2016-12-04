@@ -381,17 +381,17 @@ def withdraw():
             balance = (float(request.form['dollars'])) + (cents/100.00)
             transactiontype = "Withdraw"
             sql_db = get_db()
-            cur1 = sql_db.execute('''select * from accounts where username = ? ''',[username])
+            cur1 = sql_db.execute('''select * from accounts where username = ? ''', [username])
             accounts = cur1.fetchall()
-            print (accounts)
+            print accounts
             flag = False
 
             for item in accounts:
-                if(item[3] == account_name1):
+                if item[3] == account_name1:
                     flag = True
             print flag
 
-            if(flag == False):
+            if flag == False:
                 message = Markup("<h3>False Account Name!</h3>")
                 flash(message)
                 return render_template("withdraw.html", accounts=accounts)
@@ -400,9 +400,7 @@ def withdraw():
                     and accountname = ?''', [username, account_name1])
             value1 = value1.fetchone()[0]
 
- 
-
-            if (value1 < balance):
+            if value1 < balance:
                 message = Markup("<h3>Insufficient funds!</h3>")
                 flash(message)
                 return render_template("withdraw.html", accounts=accounts)
@@ -410,10 +408,10 @@ def withdraw():
                 new_value1 = float(value1) - balance
                 sql_db.execute('''insert into transactions (username_1, account_1, username_2,
                     account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
-                            [username, account_name1, username, account_name1, balance,
+                               [username, account_name1, username, account_name1, balance,
                                 transactiontype])
                 sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                            [new_value1, username, account_name1])
+                               [new_value1, username, account_name1])
                 cur = sql_db.execute('''select timestamp from transactions order by timestamp
                     desc limit 1''')
                 timestamp = cur.fetchone()[0]
@@ -421,7 +419,7 @@ def withdraw():
                 sql_db.commit()
 
                 transaction = Transaction(timestamp, account_name1, account_name1,
-                                      balance, transactiontype)
+                                          balance, transactiontype)
                 user.add_transaction(transaction)
                 session['userObject'] = user
 
