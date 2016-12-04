@@ -9,6 +9,7 @@ import os
 import time
 from sqlite3 import dbapi2 as sqlite3
 from flask import Flask, flash, render_template, request, g, redirect, session
+from flask import Markup
 from custom_json_encoder import CustomJSONEncoder, CustomJSONDecoder
 from user import User
 from account import Account
@@ -380,28 +381,51 @@ def withdraw():
             balance = (float(request.form['dollars'])) + (cents/100.00)
             transactiontype = "Withdraw"
             sql_db = get_db()
+            cur1 = sql_db.execute('''select * from accounts where username = ? ''',[username])
+            accounts = cur1.fetchall()
+            print (accounts)
+            flag = False
+
+            for item in accounts:
+                if(item[3] == account_name1):
+                    flag = True
+            print flag
+
+            if(flag == False):
+                message = Markup("<h3>False Account Name!</h3>")
+                flash(message)
+                return render_template("withdraw.html", accounts=accounts)
+
             value1 = sql_db.execute('''select balance from accounts where username = ?
                     and accountname = ?''', [username, account_name1])
             value1 = value1.fetchone()[0]
-            new_value1 = float(value1) - balance
-            sql_db.execute('''insert into transactions (username_1, account_1, username_2,
-                account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
-                           [username, account_name1, username, account_name1, balance,
-                            transactiontype])
-            sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
-                           [new_value1, username, account_name1])
-            cur = sql_db.execute('''select timestamp from transactions order by timestamp
-                desc limit 1''')
-            timestamp = cur.fetchone()[0]
 
-            sql_db.commit()
+ 
 
-            transaction = Transaction(timestamp, account_name1, account_name1,
+            if (value1 < balance):
+                message = Markup("<h3>Insufficient funds!</h3>")
+                flash(message)
+                return render_template("withdraw.html", accounts=accounts)
+            else:
+                new_value1 = float(value1) - balance
+                sql_db.execute('''insert into transactions (username_1, account_1, username_2,
+                    account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
+                            [username, account_name1, username, account_name1, balance,
+                                transactiontype])
+                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                            [new_value1, username, account_name1])
+                cur = sql_db.execute('''select timestamp from transactions order by timestamp
+                    desc limit 1''')
+                timestamp = cur.fetchone()[0]
+
+                sql_db.commit()
+
+                transaction = Transaction(timestamp, account_name1, account_name1,
                                       balance, transactiontype)
-            user.add_transaction(transaction)
-            session['userObject'] = user
+                user.add_transaction(transaction)
+                session['userObject'] = user
 
-            return redirect("/")
+                return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
