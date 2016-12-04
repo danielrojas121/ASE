@@ -68,12 +68,12 @@
         <div class="form-group row">
           <div class="col-sm-4">
           <span class="currencyinput form-control"><strong>$</strong>
-          	<input type="number" name="dollars" id="dollars" placeholder="0" width="21" required title="dollars">
+          	<input type="number" min="0" name="dollars" id="dollars" placeholder="0" width="21" required title="dollars">
           </span>
           </div>
           <div class="col-sm-4">
           <span class="currencyinput form-control"><strong>.</strong>
-          	<input type="number" size="2" name="cents" id="cents" placeholder="00" maxlength="2" required title="cents">
+          	<input type="number" min="0" max="99" size="2" name="cents" id="cents" placeholder="00" maxlength="2" required title="cents">
           </span>
           </div>
         </div>
