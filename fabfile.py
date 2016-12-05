@@ -22,6 +22,7 @@ def static_analyzer():
     local("pylint custom_json_encoder.py")
     local("pylint user.py")
     local("pylint account.py")
+    local("pylint transaction.py")
 
 def run_tests():
     '''Perform tests here'''
