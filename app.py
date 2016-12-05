@@ -341,6 +341,7 @@ def view_current_account():
                 print "interest time!"
                 old = item[5]
                 update_balance = old*(1 + 0.1*diff2)
+
                 sql_db.execute('''UPDATE accounts SET balance = ?
                                WHERE username = ? and accountname = ?''',
                                [update_balance, item[2], item[3]])
@@ -470,6 +471,7 @@ def purchase():
                     account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name, store_name, item_name, purchase_amount,
                                 transaction_type])
+
                 sql_db.execute('''UPDATE accounts SET balance = ?
                                WHERE username = ? and accountname = ?''',
                                [balance, username, account_name])
@@ -538,6 +540,7 @@ def withdraw():
                     account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name1, username, account_name1, balance,
                                 transactiontype])
+
                 sql_db.execute('''UPDATE accounts SET balance = ?
                                WHERE username = ? and accountname = ?''',
                                [new_value1, username, account_name1])
