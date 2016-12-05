@@ -91,17 +91,28 @@ def add_bank_account():
             cents = float(cents)
             balance = (float(request.form['dollars'])) + (cents/100)
 
-            account = Account(account_name, account_type, username)
-            account.deposit(balance)
-            user.add_account(account)
-
             sql_db = get_db()
-            sql_db.execute('''insert into accounts (username, accountname, type, balance) values
-                           (?, ?, ?, ?)''',
-                           [username, account_name, account_type, balance])
-            sql_db.commit()
-            session['userObject'] = user
-            return redirect("/")
+            cur1 = sql_db.execute('''select * from accounts where username = ?''', [username])
+            accounts = cur1.fetchall()
+            flag = False
+            for account in accounts:
+                if account[3] == account_name:
+                    flag = True
+            if flag == True:
+                message = Markup("<h3>Account Name Is Already In Use!</h3>")
+                flash(message)
+                return render_template("add_bank_account.html", accounts=accounts)
+            else:
+                account = Account(account_name, account_type, username)
+                account.deposit(balance)
+                user.add_account(account)
+
+                sql_db.execute('''insert into accounts (username, accountname, type, balance) values
+                               (?, ?, ?, ?)''',
+                               [username, account_name, account_type, balance])
+                sql_db.commit()
+                session['userObject'] = user
+                return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
@@ -170,9 +181,11 @@ def transfer():
                                account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name1, username, account_name2, balance,
                                 transactiontype])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [value1, username, account_name1])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [value2, username, account_name2])
                 cur2 = sql_db.execute('''select timestamp from transactions order by timestamp
                     desc limit 1''')
@@ -267,9 +280,11 @@ def sendmoney():
                                account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name1, username2, account_name2, balance,
                                 transactiontype])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [value1, username, account_name1])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [value2, username2, account_name2])
                 cur3 = sql_db.execute('''select timestamp from transactions order by timestamp
                     desc limit 1''')
@@ -326,7 +341,8 @@ def view_current_account():
                 print "interest time!"
                 old = item[5]
                 update_balance = old*(1 + 0.1*diff2)
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [update_balance, item[2], item[3]])
                 sql_db.commit()
                 session['flag'] = True
@@ -380,7 +396,7 @@ def deposit():
                     and accountname = ?''', [username, account_name])
             balance = float(balance.fetchone()[0])
             balance += deposit_amount
-            
+
             sql_db.execute('''insert into transactions (username_1, account_1, username_2,
                 account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                            [username, account_name, username, account_name, deposit_amount,
@@ -437,7 +453,7 @@ def purchase():
                 message = Markup("<h3>False Account Name!</h3>")
                 flash(message)
                 return render_template("make_purchase.html", accounts=accounts)
-            
+
             balance = sql_db.execute('''select balance from accounts where username = ?
                     and accountname = ?''', [username, account_name])
             balance = float(balance.fetchone()[0])
@@ -454,7 +470,8 @@ def purchase():
                     account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name, store_name, item_name, purchase_amount,
                                 transaction_type])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [balance, username, account_name])
 
                 cur = sql_db.execute('''select timestamp from transactions order by timestamp
@@ -521,7 +538,8 @@ def withdraw():
                     account_2, amount, type) values(?, ?, ?, ?, ?, ?)''',
                                [username, account_name1, username, account_name1, balance,
                                 transactiontype])
-                sql_db.execute('UPDATE accounts SET balance = ? WHERE username = ? and accountname = ?',
+                sql_db.execute('''UPDATE accounts SET balance = ?
+                               WHERE username = ? and accountname = ?''',
                                [new_value1, username, account_name1])
                 cur = sql_db.execute('''select timestamp from transactions order by timestamp
                     desc limit 1''')
