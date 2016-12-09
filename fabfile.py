@@ -27,7 +27,7 @@ def static_analyzer():
 def run_tests():
     '''Perform tests here'''
     local("sqlite3 < dbtest.txt")
-    local("pytest")
+    local("py.test")
 
 def init_database():
     '''Initializes the server'''
