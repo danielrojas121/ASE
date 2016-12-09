@@ -71,8 +71,7 @@ def signup():
             sql_db.commit()
             return redirect("/")
         else:
-            flash('Please choose another username')
-            return render_template("signup.html")
+            return redirect("/signup")
 
     else:
         return render_template("signup.html")
