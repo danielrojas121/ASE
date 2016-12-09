@@ -94,7 +94,7 @@ def add_bank_account():
             sql_db = get_db()
             cur1 = sql_db.execute('''select * from accounts where username = ?''', [username])
             accounts = cur1.fetchall()
-            flag = False
+            '''flag = False
             for account in accounts:
                 if account[3] == account_name:
                     flag = True
@@ -102,17 +102,17 @@ def add_bank_account():
                 message = Markup("<h3>Account Name Is Already In Use!</h3>")
                 flash(message)
                 return render_template("add_bank_account.html", accounts=accounts)
-            else:
-                account = Account(account_name, account_type, username)
-                account.deposit(balance)
-                user.add_account(account)
+            else:'''
+            account = Account(account_name, account_type, username)
+            account.deposit(balance)
+            user.add_account(account)
 
-                sql_db.execute('''insert into accounts (username, accountname, type, balance) values
-                               (?, ?, ?, ?)''',
-                               [username, account_name, account_type, balance])
-                sql_db.commit()
-                session['userObject'] = user
-                return redirect("/")
+            sql_db.execute('''insert into accounts (username, accountname, type, balance) values
+                           (?, ?, ?, ?)''',
+                           [username, account_name, account_type, balance])
+            sql_db.commit()
+            session['userObject'] = user
+            return redirect("/")
         else:
             sql_db = get_db()
             cur = sql_db.execute('select * from accounts where username = ?',
