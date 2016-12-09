@@ -72,7 +72,8 @@ def signup():
             return redirect("/")
         else:
             flash('Please choose another username')
-            return redirect("/signup")
+            return render_template("signup.html")
+
     else:
         return render_template("signup.html")
 
