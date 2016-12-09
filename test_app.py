@@ -108,8 +108,9 @@ def test_add_bad_account_dirtydollar(client):
 	assert client.get('/view_current_account').status_code == 200
 	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar='eeee', cents=45)).status_code == 400
 
-def test_add_bad_account_dirtycents(client):
+def test_add_bad_account_duplicateaccount(client):
 	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
 	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
-	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents='eeee')).status_code == 400
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=45)).status_code == 400
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=45)).status_code == 400
