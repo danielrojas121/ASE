@@ -314,6 +314,7 @@ def view_current_account():
         minute2 = time_1[1]
         seconds2 = time_1[2]
         update_balance = 0
+        count = 0
         for item in new_accounts:
             time1 = item[1]
             time2 = time1.split()[1]
@@ -328,6 +329,7 @@ def view_current_account():
             total2 = (min2 * 60) + (sec2)
             diff = abs(total2-total1)
             diff2 = abs(min2 - min1)
+
             session['interest'] = False
             if(diff%60 < 5) and (session.get('interest') is False):
                 print "INTEREST TIME!"
@@ -338,9 +340,11 @@ def view_current_account():
                                WHERE username = ? and accountname = ?''',
                                [update_balance, item[2], item[3]])
                 sql_db.commit()
+
                 session['interest'] = True
             elif(diff%60 != 0) or (session.get('interest')):
                 session['interest'] = False
+
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 @APP.route("/view_transactions", methods=["GET"])
