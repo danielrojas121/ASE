@@ -98,7 +98,7 @@ def add_bank_account():
             for account in accounts:
                 if account[3] == account_name:
                     flag = True
-            if flag == True:
+            if flag:
                 message = Markup("<h3>Account Name Is Already In Use!</h3>")
                 flash(message)
                 return render_template("add_bank_account.html", accounts=accounts)
@@ -149,16 +149,12 @@ def transfer():
                 if item[3] == account_name2:
                     flag2 = True
 
-            if flag1 == False and flag2 == False:
-                message = Markup("<h3>False Account Name 1 and 2!</h3>")
+            if flag1 is False:
+                message = Markup("<h3>Invalid Account Name 1!</h3>")
                 flash(message)
                 return render_template("transfer.html", accounts=accounts)
-            elif flag1 == False:
-                message = Markup("<h3>False Account Name 1!</h3>")
-                flash(message)
-                return render_template("transfer.html", accounts=accounts)
-            elif flag2 == False:
-                message = Markup("<h3>False Account Name 2!</h3>")
+            elif flag2 is False:
+                message = Markup("<h3>Invalid Account Name 2!</h3>")
                 flash(message)
                 return render_template("transfer.html", accounts=accounts)
 
@@ -223,8 +219,8 @@ def sendmoney():
             curr = sql_db.execute('''select * from logins ''')
             logins = curr.fetchall()
             flag = False
-            for x in logins:
-                if x[1] == username2:
+            for login in logins:
+                if login[1] == username2:
                     flag = True
             if username2 == username:
                 flag = False
@@ -234,8 +230,8 @@ def sendmoney():
             cur2 = sql_db.execute('''select * from accounts where username = ? ''', [username2])
             accounts2 = cur2.fetchall()
 
-            if flag == False:
-                message = Markup("<h3>False Username!</h3>")
+            if flag is False:
+                message = Markup("<h3>Invalid Username!</h3>")
                 flash(message)
                 return render_template("sendmoney.html", accounts=accounts)
 
@@ -249,16 +245,12 @@ def sendmoney():
                 if elem[3] == account_name2:
                     flag2 = True
 
-            if flag1 == False and flag2 == False:
-                message = Markup("<h3>False Account Name 1 and 2!</h3>")
+            if flag1 is False:
+                message = Markup("<h3>Invalid Account Name 1!</h3>")
                 flash(message)
                 return render_template("sendmoney.html", accounts=accounts)
-            elif flag1 == False:
-                message = Markup("<h3>False Account Name 1!</h3>")
-                flash(message)
-                return render_template("sendmoney.html", accounts=accounts)
-            elif flag2 == False:
-                message = Markup("<h3>False Account Name 2!</h3>")
+            elif flag2 is False:
+                message = Markup("<h3>Invalid Account Name 2!</h3>")
                 flash(message)
                 return render_template("sendmoney.html", accounts=accounts)
 
@@ -337,10 +329,10 @@ def view_current_account():
             total2 = (min2 * 60) + (sec2)
             diff = abs(total2-total1)
             diff2 = abs(min2 - min1)
-            session['flag'] = False
-            if(diff2%1 == 0) and (diff != 0) and (count==0):
-                count = 1 
-                print "interest time!"
+
+            session['interest'] = False
+            if(diff%60 < 5) and (session.get('interest') is False):
+                print "INTEREST TIME!"
                 old = item[5]
                 update_balance = old*(1 + 0.1*diff2)
 
@@ -348,11 +340,11 @@ def view_current_account():
                                WHERE username = ? and accountname = ?''',
                                [update_balance, item[2], item[3]])
                 sql_db.commit()
-                session['flag'] = True
-                break;
-            elif((diff2%1 != 0) or count):
-                session['flag'] = False
-                count = 0
+
+                session['interest'] = True
+            elif(diff%60 != 0) or (session.get('interest')):
+                session['interest'] = False
+
         return render_template("view_current_account.html", accounts=accounts, logins=logins)
 
 @APP.route("/view_transactions", methods=["GET"])
@@ -391,8 +383,8 @@ def deposit():
             for item in accounts:
                 if item[3] == account_name:
                     flag = True
-            if flag == False:
-                message = Markup("<h3>False Account Name!</h3>")
+            if flag is False:
+                message = Markup("<h3>Invalid Account Name!</h3>")
                 flash(message)
                 return render_template("deposit.html", accounts=accounts)
 
@@ -454,8 +446,8 @@ def purchase():
             for item in accounts:
                 if item[3] == account_name:
                     flag = True
-            if flag == False:
-                message = Markup("<h3>False Account Name!</h3>")
+            if flag is False:
+                message = Markup("<h3>Invalid Account Name!</h3>")
                 flash(message)
                 return render_template("make_purchase.html", accounts=accounts)
 
@@ -517,16 +509,14 @@ def withdraw():
             sql_db = get_db()
             cur1 = sql_db.execute('''select * from accounts where username = ? ''', [username])
             accounts = cur1.fetchall()
-            print accounts
             flag = False
 
             for item in accounts:
                 if item[3] == account_name1:
                     flag = True
-            print flag
 
-            if flag == False:
-                message = Markup("<h3>False Account Name!</h3>")
+            if flag is False:
+                message = Markup("<h3>Invalid Account Name!</h3>")
                 flash(message)
                 return render_template("withdraw.html", accounts=accounts)
 
@@ -577,7 +567,8 @@ def logout():
 @APP.after_request
 def add_header(response):
     '''Does not allow back button after logged out'''
-    response.headers['Cache-Control'] = 'no-cache, no-store, , must-revalidate, post-check=0, pre-check=0'
+    header = 'no-cache, no-store, , must-revalidate, post-check=0, pre-check=0'
+    response.headers['Cache-Control'] = header
     return response
 
 def connect_db():
