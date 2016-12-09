@@ -8,6 +8,7 @@ def prepare_deploy():
     static_analyzer()
     init_database()
     run_tests()
+    report_test_coverage()
     run_server()
 
 def quick_deploy():
@@ -28,6 +29,11 @@ def run_tests():
     '''Perform tests here'''
     local("sqlite3 < dbtest.txt")
     local("pytest")
+
+def report_test_coverage():
+    '''Run coverage on our test suite'''
+    local("coverage run test_app.py")
+    local("coverage report")
 
 def init_database():
     '''Initializes the server'''
