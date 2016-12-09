@@ -28,7 +28,7 @@ def static_analyzer():
 def run_tests():
     '''Perform tests here'''
     local("sqlite3 < dbtest.txt")
-    local("pytest")
+    local("py.test")
 
 def report_test_coverage():
     '''Run coverage on our test suite'''

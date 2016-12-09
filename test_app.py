@@ -58,11 +58,12 @@ def test_duplicate_signup(client):
 	assert client.get('/view_current_account').status_code == 302
 
 '''Account tests'''
+
 def test_add_account(client):
 	assert client.post('/signup', data=dict(username = 'testingaccount', password = 'test')).status_code == 302
 	assert client.post('/login', data=dict(usr = 'testingaccount', pwd = 'test')).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
-	assert client.post('/add_bank_account', data=dict(username= 'testingaccount', account_name= 'Chase', account_type='Checking', dollars=100, cents=45)).status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingaccount', account_name= 'Chase', account_type='Checking', dollars=100, cents=45)).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
 
 def test_add_bad_account(client):
@@ -70,5 +71,46 @@ def test_add_bad_account(client):
 	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
 	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking')).status_code == 400
-	
 
+def test_add_bad_account_negative_dollar(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=-100, cents=45)).status_code == 400
+
+def test_add_bad_account_negative_cent(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=-45)).status_code == 400
+
+def test_add_bad_account_morethan_twodecimal_cent(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=450)).status_code == 400
+
+def test_add_bad_account_overflow_dollar(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100000000, cents=45)).status_code == 400
+
+def test_add_bad_account_dirtydollar(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar='eeee', cents=45)).status_code == 400
+
+def test_add_bad_account_dirtydollar(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar='eeee', cents=45)).status_code == 400
+
+def test_add_bad_account_duplicateaccount(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=45)).status_code == 400
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Chase', account_type='Checking', dollar=100, cents=45)).status_code == 400
