@@ -58,14 +58,14 @@ def test_duplicate_signup(client):
 	assert client.get('/view_current_account').status_code == 302
 
 '''Account tests'''
-'''
+
 def test_add_account(client):
 	assert client.post('/signup', data=dict(username = 'testingaccount', password = 'test')).status_code == 302
 	assert client.post('/login', data=dict(usr = 'testingaccount', pwd = 'test')).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
 	assert client.post('/add_bank_account', data=dict(username= 'testingaccount', account_name= 'Chase', account_type='Checking', dollars=100, cents=45)).status_code == 302
 	assert client.get('/view_current_account').status_code == 200
-'''
+
 def test_add_bad_account(client):
 	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
 	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
