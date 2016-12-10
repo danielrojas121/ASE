@@ -20,16 +20,16 @@ For this demo, we will give a brief overview of our motivation to create this pr
 17. View new bank account
 18. Click on Deposit
 19. Enter 'Checking1' as account name
-20. Enter 50 in dollars and 25 in cents
+20. Enter 50 in dollars and 10 in cents
 21. Click on deposit
 22. View /view_current_account page
-23. View $50.10 more dollars on Checking1
+23. View $50.10 more dollars on Checking1 (final amount: $250.35)
 24. Click on Withdraw
 25. Enter 'Checking1' as account name
-26. Enter 50 in dollars and 25 in cents
+26. Enter 50 in dollars and 10 in cents
 27. Click on Withdraw
 28. View /view_current_account page
-29. View $50.10 less dollars on Checking1
+29. View $50.10 less dollars on Checking1 (final amount: $200.25)
 30. Click on Add Account
 31. View new back account info form
 32. Enter 'Saving1' as account name
@@ -45,15 +45,15 @@ For this demo, we will give a brief overview of our motivation to create this pr
 42. Enter 100 in dollars and 10 in cents
 43. Click on Transfer
 44.  View /view_current_account page
-45. View new balances for accounts
+45. View new balances for accounts (final amounts - Checking1: $100.15 Saving1: $400.35)
 46. Click on Make a Purchase
 47. Enter ‘Checking1’ as account name 1
 48. Enter ‘Academy’ as Store
 49. Enter ‘Thermals’ as Purchased Items
-50. Enter 20 in dollars and 12 in cents
+50. Enter 20 in dollars and 12 in cents 
 51. Click on Purchase
 52. View /view_current_account page
-53. View new balance on ‘Checking1’
+53. View new balance on ‘Checking1’ (final amount: Checking1: $80.03)
 54. Click on View Transactions on the nav-bar
 55. View Deposit, Withdraw, Transfer, and Purchase transactions
 56. Click on Logout on the nav-bar
@@ -75,10 +75,10 @@ For this demo, we will give a brief overview of our motivation to create this pr
 74. Click on Send Money
 75. Enter ‘DanChecking1’ for sender account name
 76. Enter ‘Mari’ for username of recipient
-77. Enter ‘Checking1’ for account name of receipient
-78. Enter 10 in dollars and 15 in cents
+77. Enter ‘Checking1’ for account name of recipient
+78. Enter 10 in dollars and 10 in cents 
 79. Click Send button
-80. View the new balance on ‘Checking1’ account
+80. View the new balance on ‘Checking1’ account (final amount- Dan’s Checking1: $190.15 Mari’s Checking1: $90.13)
 81. Click on ‘View Transactions’ tab at top
 82. View the recorded transaction on the list
 
