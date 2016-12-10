@@ -282,6 +282,56 @@ def test_withdraw_wrong_account(client):
 	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
 	assert client.post('/withdraw', data=dict(username= 'testingbadaccount', account_name= '1', dollars=50, cents=45)).status_code == 200
 
+'''Make Purchase Test'''
+def test_purchase(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=50, cents=45)).status_code == 302
+
+def test_purchase_negative_dollar(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=-50, cents=45)).status_code == 302
+
+def test_purchase_negative_cent(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=50, cents=-45)).status_code == 302
+
+def test_purchase_negative_dollar_cent(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=-50, cents=-45)).status_code == 302
+
+def test_purhcase_more_than_2_decimals(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=50, cents=145)).status_code == 302
+
+def test_purchase_more_than_max(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= 'Checking', store_name= 'Academy', item_name='thermals', dollars=50000000000000000, cents=45)).status_code == 200
+
+def test_purchase_wrong_account(client):
+	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
+	assert client.post('/login', data=dict(usr = 'testingbadaccount', pwd = 'test')).status_code == 302
+	assert client.get('/view_current_account').status_code == 200
+	assert client.post('/add_bank_account', data=dict(username= 'testingbadaccount', account_name= 'Checking', account_type='Checking', dollars=100, cents=45)).status_code == 302
+	assert client.post('/purchase', data=dict(username= 'testingbadaccount', account_name= '1', store_name= 'Academy', item_name='thermals', dollars=50, cents=45)).status_code == 200
+
 '''Send Money Test'''
 def test_sendmoney_nosending_account(client):
 	assert client.post('/signup', data=dict(username = 'testingbadaccount', password = 'test')).status_code == 302
