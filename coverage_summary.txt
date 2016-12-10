@@ -1,0 +1,3 @@
+Our code coverage is not 100% as most of our error checking is done on the UI side. So before data even makes it to the backend these errors have already been sorted out. We prioritized error prevention rather than expecting and handling every single type of error.
+Along with our Pytest tests that we started during the Black Box Testing assignment, we devised a manual testing script to further solidy our testing: https://github.com/dhr2119/ASE/issues/18
+This script has allowed us to check and test all the functionality of our application to ensure that every part is working as expected.
