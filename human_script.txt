@@ -1,0 +1,89 @@
+For this demo, we will give a brief overview of our motivation to create this product.  We will explain the language and tools we used (Pylint static analyzer, Pytest tester, Travis CI for continuous integration, etc.). Throughout the steps listed below, group members will explain the functionality they worked on.
+
+
+1. Assuming necessary tools are installed.
+2. Run ‘fab prepare_deploy’ in project root directory
+3. go to http://localhost:5000/ in an internet browser
+4. click on Sign Up
+5. Enter 'Mari' as username and '123' as password
+6. click on Sign Up
+7. enter 'Mari' as username and '123' as password
+8. click on Log In
+9. View zero current bank accounts and welcome message
+10. click on Add Account
+11. View new bank account info form
+12. Enter 'Checking1' as account name
+13. Enter 200 in dollars and 25 in cents
+14. Click on checking in drop down
+15. Click on Add Account button
+16. Observe updated Home page
+17. View new bank account
+18. Click on Deposit
+19. Enter 'Checking1' as account name
+20. Enter 50 in dollars and 25 in cents
+21. Click on deposit
+22. View /view_current_account page
+23. View $50.10 more dollars on Checking1
+24. Click on Withdraw
+25. Enter 'Checking1' as account name
+26. Enter 50 in dollars and 25 in cents
+27. Click on Withdraw
+28. View /view_current_account page
+29. View $50.10 less dollars on Checking1
+30. Click on Add Account
+31. View new back account info form
+32. Enter 'Saving1' as account name
+33. Enter 300 in dollars and 25 in cents
+34. Click on saving in drop down
+35. Click on Add Account
+36. View /view_current_account page
+37. View new bank account
+38. Click on Make a Transfer
+39. View Transfer Information form
+40. Enter ‘Checking1’ as account name 1
+41. Enter ‘Saving1’ as account name 2
+42. Enter 100 in dollars and 10 in cents
+43. Click on Transfer
+44.  View /view_current_account page
+45. View new balances for accounts
+46. Click on Make a Purchase
+47. Enter ‘Checking1’ as account name 1
+48. Enter ‘Academy’ as Store
+49. Enter ‘Thermals’ as Purchased Items
+50. Enter 20 in dollars and 12 in cents
+51. Click on Purchase
+52. View /view_current_account page
+53. View new balance on ‘Checking1’
+54. Click on View Transactions on the nav-bar
+55. View Deposit, Withdraw, Transfer, and Purchase transactions
+56. Click on Logout on the nav-bar
+57. Try pressing the back button
+58. click on Sign Up
+59. Enter ‘Dan’ as username and '123' as password
+60. click on Sign Up
+61. enter ‘Dan’ as username and '123' as password
+63. click on Log In
+64. View zero current bank accounts and welcome message
+65. click on Add Account
+67. View new bank account info form
+68. Enter 'DanChecking1' as account name
+69. Enter 200 in dollars and 25 in cents
+70. Click on checking in drop down
+71. Click on Add Account
+72. View /view_current_account page
+73. View new bank account
+74. Click on Send Money
+75. Enter ‘DanChecking1’ for sender account name
+76. Enter ‘Mari’ for username of recipient
+77. Enter ‘Checking1’ for account name of receipient
+78. Enter 10 in dollars and 15 in cents
+79. Click Send button
+80. View the new balance on ‘Checking1’ account
+81. Click on ‘View Transactions’ tab at top
+82. View the recorded transaction on the list
+
+
+
+
+
+
