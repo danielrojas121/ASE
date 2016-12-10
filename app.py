@@ -5,6 +5,11 @@
     Frank Cabada
     Duru Kahyaoglu
 """
+#pylint: disable=R0911
+#pylint: disable=R0912
+#pylint: disable=R0914
+#pylint: disable=R0915
+
 import os
 import time
 from sqlite3 import dbapi2 as sqlite3
@@ -94,15 +99,6 @@ def add_bank_account():
             sql_db = get_db()
             cur1 = sql_db.execute('''select * from accounts where username = ?''', [username])
             accounts = cur1.fetchall()
-            '''flag = False
-            for account in accounts:
-                if account[3] == account_name:
-                    flag = True
-            if flag:
-                message = Markup("<h3>Account Name Is Already In Use!</h3>")
-                flash(message)
-                return render_template("add_bank_account.html", accounts=accounts)
-            else:'''
             account = Account(account_name, account_type, username)
             account.deposit(balance)
             user.add_account(account)
@@ -314,7 +310,6 @@ def view_current_account():
         minute2 = time_1[1]
         seconds2 = time_1[2]
         update_balance = 0
-        count = 0
         for item in new_accounts:
             time1 = item[1]
             time2 = time1.split()[1]
