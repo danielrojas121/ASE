@@ -33,7 +33,7 @@ APP.config.update(dict(
 APP.config.from_envvar('FLASKR_SETTINGS', silent=True)
 APP.json_encoder = CustomJSONEncoder # Converts our objects to JSON dicts
 APP.json_decoder = CustomJSONDecoder
-
+#test comment
 @APP.route("/", methods=["POST", "GET"])
 def home():
     """Home function to render view accounts or login page."""
